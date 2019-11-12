@@ -5,6 +5,10 @@ ruby '2.6.4'
 
 # add foreman
 gem 'foreman'
+# add bootstrap (depandency- jquery-rails)
+gem 'bootstrap', '~> 4.3.1'
+gem 'jquery-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
 # Use mysql as the database for Active Record
