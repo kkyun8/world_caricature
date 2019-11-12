@@ -1,5 +1,5 @@
 <template>
-  <div class="py-3">
+  <div id=footer class="py-3">
     <div class="container">
       <div class="row">
         <div class="col-md-12 text-center"> <i class="d-block fa fa-stop-circle mb-3 text-muted fa-3x"></i>
@@ -28,11 +28,13 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   
 }
 </script>
+
 <style lang="scss">
 
 </style>
