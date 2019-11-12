@@ -14,8 +14,12 @@
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
-//= require jquery3
+//= require jquery
+//= require jquery_ujs
+//= require jquery.turbolinks
 //= require popper
 //= require bootstrap-sprockets
+//= require navbar-ontop
+//= require animate-in
 
 console.log('Hello World from Webpacker')
