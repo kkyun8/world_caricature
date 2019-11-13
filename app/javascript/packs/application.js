@@ -19,7 +19,7 @@
 //= require jquery.turbolinks
 //= require popper
 //= require bootstrap-sprockets
-//= require navbar-ontop
-//= require animate-in
+//= require ./navbar-ontop
+//= require ./animate-in
 
 console.log('Hello World from Webpacker')

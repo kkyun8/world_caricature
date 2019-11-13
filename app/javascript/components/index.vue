@@ -6,7 +6,7 @@
         <div class="px-5 col-md-8 text-center mx-auto">
           <h3 class="text-primary display-4"><b>ワルード</b><br><b>似顔絵</b></h3>
           <h2 class="my-3">世界で活躍する似顔絵師から<br>デジタル似顔絵を書いてもらおう<br></h2>
-          <p class="mb-3">I throw myself down among the tall grass by the trickling stream; and, as I lie close to the earth, a thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable.</p> <a href="#" class="btn btn-primary">サンプルイメージをみる</a>
+          <p class="mb-3">I throw myself down among the tall grass by the trickling stream; and, as I lie close to the earth, a thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable.</p> <a href="/sample_images" class="btn btn-primary">サンプルイメージをみる</a>
         </div>
       </div>
     </div>

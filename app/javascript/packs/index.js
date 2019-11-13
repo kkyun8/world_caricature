@@ -1,11 +1,16 @@
 import Vue from 'vue/dist/vue.esm.js'
+import Vuex from 'vuex'
 import Router from '../routes/routes'
 import MainNav from '../components/common/navbar.vue'
 import Footer from '../components/common/footer.vue'
+import 'es6-promise/auto'
+
+Vue.use(Vuex)
 
 var app = new Vue({
   router: Router,
   el: '#app',
+  //store,
   components: {
     'navbar': MainNav,
     'footerbar': Footer,
