@@ -1,11 +1,13 @@
 import Vue from 'vue/dist/vue.esm.js'
 import Vuex from 'vuex'
 import Router from '../routes/routes'
+import BootstrapVue from 'bootstrap-vue'
 import MainNav from '../components/common/navbar.vue'
 import Footer from '../components/common/footer.vue'
 import 'es6-promise/auto'
 
 Vue.use(Vuex)
+Vue.use(BootstrapVue)
 
 var app = new Vue({
   router: Router,
