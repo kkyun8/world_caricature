@@ -11,7 +11,7 @@
       <div class="row">
         <div class="col-md-12">
           <form class="form-inline d-flex justify-content-center">
-            <div class="input-group"> <input type="email" class="form-control form-control-lg" id="form" placeholder="キーワード入力">
+            <div class="input-group"><input v-model="keyword" class="form-control form-control-lg" id="form" placeholder="キーワード入力" >
               <div class="input-group-append"> <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button> </div>
             </div>
           </form>
@@ -32,8 +32,13 @@
   <!-- Gallery -->
   <div class="py-5">
     <div class="container">
-      <div if="images">
-        <v-image :images="images" :imagesCount="imagesCount"/>
+      <div v-if="loading" class="col-md-12">
+        <div class="loader"></div>
+      </div>
+      <div v-else>
+        <div v-if="images">
+          <v-image :images="images"/>
+        </div>
       </div>
     </div>
   </div>
@@ -51,36 +56,45 @@ export default {
       return {
         keyword: '',
         images: [],
-        imagesCount: 0
+        imagesCount: 0,
+        loading: true
       }
-  },
-  mounted: function (){
-    this.fetchImages();
   },
   computed: {
   },
+  
+  watch:{
+    // keyword: function(){
+    //   return this.images.filter((data) => { return (data[0].name == 'Name4')})
+    // }
+  },
+
+  mounted: function (){
+    this.fetchImages();
+  },
   methods:{
     fetchImages: function() {
-      var getRow = [];
+      var startRow = [];
       
       axios.get('/api/sample_images').then((response) => {
         response.data.sample_images.forEach(element => {
           var getImageCount = this.imagesCount;
           this.imagesCount++
           
-          // indexが4,8,12...の場合、pushしてgetRow初期化
-          if(this.isRow(getImageCount) && getImageCount != 0){
-            var newLength = getRow.unshift(element)
-            this.images.push(getRow);
-            getRow = [];
+          // indexが4,8,12...の場合、pushしてstartRow初期化
+          if(this.isRowStart(getImageCount) && getImageCount != 0){
+            var newLength = startRow.unshift(element)
+            this.images.push(startRow);
+            startRow = [];
           }else{
-            var newLength = getRow.unshift(element)
+            var newLength = startRow.unshift(element)
             return;
           }
         });
-        if(getRow.length != 0){
-          this.images.push(getRow);
+        if(startRow.length != 0){
+          this.images.push(startRow);
         }
+        this.loading = false
       },(error) => {
         console.log(error);
       });
@@ -88,7 +102,7 @@ export default {
     isInteger(x) {
       return Math.round(x) === x;
     },
-    isRow(count) {
+    isRowStart(count) {
       if (count == 0) return true
       let x = (count + 1) / 4;
       return Math.round(x) === x;
