@@ -9,10 +9,30 @@ import 'es6-promise/auto'
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
 
+// 検索機能のため、stateにsampleImages追加
+export const store = new Vuex.Store({
+  //state 宣言
+  state: {
+    sampleImages: []
+  },
+  //stateを読み込むことができるgetters宣言
+  getters: {
+    getSampleImages: function (state) {
+      return state.sampleImages
+    }
+  },
+  //state変更ができるmutations宣言
+  mutations: {
+    setSampleImages(state, val) {
+      state.sampleImages = val
+    }
+  },
+});
+
 var app = new Vue({
   router: Router,
   el: '#app',
-  //store,
+  store,
   components: {
     'navbar': MainNav,
     'footerbar': Footer,

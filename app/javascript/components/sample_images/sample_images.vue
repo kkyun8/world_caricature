@@ -12,7 +12,6 @@
         <div class="col-md-12">
           <form class="form-inline d-flex justify-content-center">
             <div class="input-group"><input v-model="keyword" class="form-control form-control-lg" id="form" placeholder="キーワード入力" >
-              <div class="input-group-append"> <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button> </div>
             </div>
           </form>
         </div>
@@ -47,44 +46,73 @@
 <script>
 import axios from 'axios';
 import Image from './image.vue'
+import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   components: {
     'v-image': Image,
   },
+
   data: function () {
       return {
         keyword: '',
         images: [],
         imagesCount: 0,
-        loading: true
+        // loading画面表示
+        loading: true,
+        test: []
       }
   },
+
+  // mapGettersはcomputedに宣言
   computed: {
+    ...mapGetters([
+      'getSampleImages'
+    ])
   },
   
   watch:{
-    // keyword: function(){
-    //   return this.images.filter((data) => { return (data[0].name == 'Name4')})
-    // }
+    keyword: function(val){
+      if (val.length < 1) {
+        return this.images = this.getSampleImages
+      } else {
+      return this.images = this.images.filter((array) => { 
+        return array[0].id == val
+        // return (array.filter((data) => { 
+        //   return data.id == val } ))
+        })
+      }
+    }
   },
 
   mounted: function (){
     this.fetchImages();
   },
+
+  // mapMutationsはmethodに宣言
   methods:{
+    ...mapMutations([
+      'setSampleImages'
+    ]),
+
     fetchImages: function() {
+      // rowをわけるため、配列中に配列登録
       var startRow = [];
-      
+      // 内部変数
+      let imageList = [];
+
+      // api取得
       axios.get('/api/sample_images').then((response) => {
         response.data.sample_images.forEach(element => {
+          // element はJSON.parseする必要なし、objectでGetできる
           var getImageCount = this.imagesCount;
           this.imagesCount++
           
           // indexが4,8,12...の場合、pushしてstartRow初期化
           if(this.isRowStart(getImageCount) && getImageCount != 0){
             var newLength = startRow.unshift(element)
-            this.images.push(startRow);
+
+            imageList.push(startRow)
             startRow = [];
           }else{
             var newLength = startRow.unshift(element)
@@ -92,16 +120,25 @@ export default {
           }
         });
         if(startRow.length != 0){
-          this.images.push(startRow);
+          imageList.push(startRow);
         }
+
+        // loadingをfalseにしてcssを非表示
         this.loading = false
+        // 取得したobjectをstateに保存
+        this.setSampleImages(imageList)
+        // 画面に表示されるimagesに保存
+        this.images = imageList
+        
       },(error) => {
         console.log(error);
       });
     },
+    // 自然数判断
     isInteger(x) {
       return Math.round(x) === x;
     },
+    // 画面に表示されるrowの最後のObject判断, 一つのrowに４つのイメージを表示s
     isRowStart(count) {
       if (count == 0) return true
       let x = (count + 1) / 4;
@@ -110,6 +147,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
 
 </style>
