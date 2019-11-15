@@ -24,7 +24,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a></div>
+        <div class="col-md-12">
+          <a v-for="viewKeyword in viewKeywords" v-bind:key="viewKeyword.id" class="btn btn-outline-primary mx-2" v-on:click="setKeyword(viewKeyword.name)" >{{ viewKeyword.name }}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +52,7 @@ import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   components: {
+    // imageが表示されるcomponentを設定 ./image.vue
     'v-image': Image,
   },
 
@@ -57,10 +60,9 @@ export default {
       return {
         keyword: '',
         images: [],
-        imagesCount: 0,
         // loading画面表示
         loading: true,
-        test: []
+        viewKeywords: []
       }
   },
 
@@ -76,10 +78,8 @@ export default {
       if (val.length < 1) {
         return this.images = this.getSampleImages
       } else {
-      return this.images = this.images.filter((array) => { 
-        return array[0].id == val
-        // return (array.filter((data) => { 
-        //   return data.id == val } ))
+        return this.images = this.getSampleImages.filter((array) => { 
+          return array.name.indexOf(val) >= 0 || array.information.indexOf(val) >= 0
         })
       }
     }
@@ -87,41 +87,27 @@ export default {
 
   mounted: function (){
     this.fetchImages();
+    this.getViewKeyword();
   },
 
   // mapMutationsはmethodに宣言
   methods:{
     ...mapMutations([
+
       'setSampleImages'
+
     ]),
 
     fetchImages: function() {
-      // rowをわけるため、配列中に配列登録
-      var startRow = [];
       // 内部変数
       let imageList = [];
-
+      
       // api取得
       axios.get('/api/sample_images').then((response) => {
         response.data.sample_images.forEach(element => {
-          // element はJSON.parseする必要なし、objectでGetできる
-          var getImageCount = this.imagesCount;
-          this.imagesCount++
-          
-          // indexが4,8,12...の場合、pushしてstartRow初期化
-          if(this.isRowStart(getImageCount) && getImageCount != 0){
-            var newLength = startRow.unshift(element)
-
-            imageList.push(startRow)
-            startRow = [];
-          }else{
-            var newLength = startRow.unshift(element)
-            return;
-          }
+          // element はJSON.parseする必要なし、objectそのままGetできる
+            imageList.push(element)
         });
-        if(startRow.length != 0){
-          imageList.push(startRow);
-        }
 
         // loadingをfalseにしてcssを非表示
         this.loading = false
@@ -129,21 +115,43 @@ export default {
         this.setSampleImages(imageList)
         // 画面に表示されるimagesに保存
         this.images = imageList
-        
+
       },(error) => {
         console.log(error);
       });
     },
+
     // 自然数判断
     isInteger(x) {
       return Math.round(x) === x;
     },
+
     // 画面に表示されるrowの最後のObject判断, 一つのrowに４つのイメージを表示s
     isRowStart(count) {
       if (count == 0) return true
       let x = (count + 1) / 4;
       return Math.round(x) === x;
     },
+
+    replateChar(val){
+      val.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 65248);
+      });
+    },
+
+    getViewKeyword(){
+      axios.get('/api/sample_images').then((response) => {
+        response.data.sample_images.forEach(element => {
+          this.viewKeywords.push(element)
+        })
+      },(error) =>{
+
+      });
+    },
+    
+    setKeyword(val){
+      this.keyword = val
+    }
   }
 }
 </script>
