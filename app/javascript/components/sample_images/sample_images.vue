@@ -24,7 +24,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a><a class="btn btn-outline-primary mx-2" href="#">Outline</a></div>
+        <div class="col-md-12">
+          <a v-for="viewKeyword in viewKeywords" v-bind:key="viewKeyword.id" class="btn btn-outline-primary mx-2" v-on:click="setKeyword(viewKeyword.name)" >{{ viewKeyword.name }}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -60,7 +62,7 @@ export default {
         images: [],
         // loading画面表示
         loading: true,
-        test: []
+        viewKeywords: []
       }
   },
 
@@ -85,12 +87,15 @@ export default {
 
   mounted: function (){
     this.fetchImages();
+    this.getViewKeyword();
   },
 
   // mapMutationsはmethodに宣言
   methods:{
     ...mapMutations([
+
       'setSampleImages'
+
     ]),
 
     fetchImages: function() {
@@ -115,20 +120,37 @@ export default {
         console.log(error);
       });
     },
+
     // 自然数判断
     isInteger(x) {
       return Math.round(x) === x;
     },
+
     // 画面に表示されるrowの最後のObject判断, 一つのrowに４つのイメージを表示s
     isRowStart(count) {
       if (count == 0) return true
       let x = (count + 1) / 4;
       return Math.round(x) === x;
     },
+
     replateChar(val){
       val.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
         return String.fromCharCode(s.charCodeAt(0) - 65248);
       });
+    },
+
+    getViewKeyword(){
+      axios.get('/api/sample_images').then((response) => {
+        response.data.sample_images.forEach(element => {
+          this.viewKeywords.push(element)
+        })
+      },(error) =>{
+
+      });
+    },
+    
+    setKeyword(val){
+      this.keyword = val
     }
   }
 }
