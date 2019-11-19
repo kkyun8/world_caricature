@@ -33,36 +33,41 @@
   <!-- Gallery -->
   <div class="py-5">
     <div class="container">
-      <div v-if="loading" class="col-md-12">
-        <div class="loader"></div>
+      <div v-if="images">
+        <v-image :images="images"/>
       </div>
-      <div v-else>
-        <div v-if="images">
-          <v-image :images="images"/>
-        </div>
-      </div>
+      <infinite-loading @infinite="infiniteHandler" >
+        <div slot="spinner"><div class="loader"></div></div>
+        <div slot="no-more"></div>
+    
+      </infinite-loading>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import InfiniteLoading from 'vue-infinite-loading';
 import Image from './image.vue'
 import { mapMutations, mapGetters } from 'vuex'
+import { timeout } from 'q';
+
+const api = '/api/sample_images';
 
 export default {
   components: {
     // imageが表示されるcomponentを設定 ./image.vue
     'v-image': Image,
+    InfiniteLoading,
   },
-
   data: function () {
       return {
         keyword: '',
+        start: 0,
+        end: 8,
         images: [],
         // loading画面表示
-        loading: true,
         viewKeywords: []
       }
   },
@@ -87,7 +92,7 @@ export default {
   },
 
   mounted: function (){
-    this.fetchImages();
+    // this.fetchImages();
     this.getViewKeyword();
   },
 
@@ -99,26 +104,30 @@ export default {
 
     ]),
 
-    fetchImages: function() {
-      // 内部変数
-      let imageList = [];
-      
-      // api取得
-      axios.get('/api/sample_images').then((response) => {
-        response.data.sample_images.forEach(element => {
-          // element はJSON.parseする必要なし、objectそのままGetできる
-            imageList.push(element)
-        });
+    //infinite-loadingのクラス宣言
+    infiniteHandler($state) {
+      axios.get(api, { timeout:5000 },).then(({ data }) => {
+        if (data.sample_images.length >= this.start) {
+          let getStart = this.start
+          let getEnd = this.end
+          let getData = this.images
 
-        // loadingをfalseにしてcssを非表示
-        this.loading = false
-        // 取得したobjectをstateに保存
-        this.setSampleImages(imageList)
-        // 画面に表示されるimagesに保存
-        this.images = imageList
+          this.images = data.sample_images.filter(function(value, index){
+            let getIndex = index
+            if (getStart <= getIndex && getIndex < getEnd){
+              getData.push(value)
+            }
+          })
 
+          this.images = getData
+          this.start = this.start + 8
+          this.end = this.end + 8
+          $state.loaded();
+        } else {
+          $state.complete();
+        }
       },(error) => {
-        console.log(error);
+
       });
     },
 
@@ -140,6 +149,7 @@ export default {
       });
     },
 
+    //キーワードゲット、DB未作成
     getViewKeyword(){
       axios.get('/api/sample_images').then((response) => {
         response.data.sample_images.forEach(element => {

@@ -5,15 +5,17 @@ import BootstrapVue from 'bootstrap-vue'
 import MainNav from '../components/common/navbar.vue'
 import Footer from '../components/common/footer.vue'
 import 'es6-promise/auto'
+import InfiniteLoading from 'vue-infinite-loading'
 
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
+Vue.use(InfiniteLoading)
 
 // 検索機能のため、stateにsampleImages追加
 export const store = new Vuex.Store({
   //state 宣言
   state: {
-    sampleImages: []
+    sampleImages: [],
   },
   //stateを読み込むことができるgetters宣言
   getters: {

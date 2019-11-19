@@ -4,4 +4,8 @@ class Api::SampleImagesController < ApplicationController
     @sample_images = SampleImage.order('updated_at DESC')
   end
 
+  def show
+    @sample_image = SampleImage.find(id)
+  end
+  
 end
