@@ -15,6 +15,7 @@ export default {
   },
   methods: {
     redirectOrder(){
+      this.$router.push('/sample_images/'+ this.image.id +'/order')
     }
   }
 }
