@@ -10,7 +10,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_08_092726) do
+ActiveRecord::Schema.define(version: 2019_11_23_133616) do
+
+  create_table "data_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "type_name", null: false
+    t.boolean "delflg", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "keywords", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "data_type_id", null: false
+    t.string "value", null: false
+    t.boolean "delflg", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "contents", null: false
+    t.boolean "delflg", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "sample_image_id", null: false
+    t.string "order_number", null: false
+    t.integer "order_status", default: 1
+    t.string "flame_size", default: "M"
+    t.boolean "premium_wrapping", default: false
+    t.integer "price", null: false
+    t.string "name_kanji", null: false
+    t.string "name_furigana", null: false
+    t.string "email"
+    t.string "line_id"
+    t.integer "postal_code", null: false
+    t.string "address1", null: false
+    t.string "address2", null: false
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "sample_images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false

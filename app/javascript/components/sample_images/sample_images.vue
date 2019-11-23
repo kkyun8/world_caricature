@@ -39,7 +39,6 @@
       <infinite-loading @infinite="infiniteHandler" >
         <div slot="spinner"><div class="loader"></div></div>
         <div slot="no-more"></div>
-    
       </infinite-loading>
     </div>
   </div>
@@ -105,6 +104,7 @@ export default {
     ]),
 
     //infinite-loadingのクラス宣言
+    // railsのsqlで範囲を指定することでSQL一回で全データ取得することを修正する予定
     infiniteHandler($state) {
       axios.get(api, { timeout:5000 },).then(({ data }) => {
         if (data.sample_images.length >= this.start) {

@@ -33,7 +33,7 @@
         <div class="col-md-6 p-lg-5 p-3">
           <div class="row">
             <div class="col-md-12">
-              <h1 class="">Heading 1</h1>
+              <h1 class="">{{ sample_image.name }}</h1>
             </div>
           </div><img class="img-fluid d-block" src="https://static.pingendo.com/img-placeholder-1.svg" width="1500">
         </div>
@@ -41,9 +41,9 @@
           <div class="card">
             <div class="card-body h-25" style="">
               <h5 class="card-title"><b>作品情報</b></h5>
-              <p class="card-text">人数：<br></p>
-              <p class="card-text">サイズ：<br></p>
-              <p class="card-text" contenteditable="true">プレゼント有無：<br></p>
+              <p class="card-text">価格：{{ sample_image.price }}<br></p>
+              <p class="card-text">人数：{{ sample_image.number_of_people }}<br></p>
+              <p class="card-text">{{ sample_image.information }}<br></p>
             </div>
           </div>
         </div>
@@ -107,13 +107,14 @@ import CustomerInfomation from './customer_infomation.vue'
 import Axios from 'axios';
 
 export default {
-
+  props: ['id']
+  ,
   components: {
     'customer-info': CustomerInfomation
   },
   data: function(){
     return {
-      image: []
+      sample_image: '',
     }
   },
   mounted: function(){
@@ -124,7 +125,7 @@ export default {
     getSampleImage: function(){
       let id = this.$route.params['id']
       axios.get('/api/sample_images/' + this.id ).then((response) => {
-
+         this.sample_image = response.data.sample_image
       },(error) => {
 
       });

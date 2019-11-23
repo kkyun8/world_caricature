@@ -14,7 +14,7 @@ export default new VueRouter({
     { path: '/', component: Index },
     { path: '/sample_images', component: SampleImages },
     { path: '/about_the_order', component: AboutTheOrder },
-    { path: '/sample_images/:id/order', component: Order },
+    { path: '/sample_images/:id/order', component: Order, props: true },
     { path: '/contact', component: Contact }
   ],
 })
