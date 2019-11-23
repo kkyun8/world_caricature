@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get '/contact', to: 'home#index'
 
   namespace :api, format: 'json' do
-    resources :sample_images, only: :index
+    resources :sample_images
   end
   
 end
