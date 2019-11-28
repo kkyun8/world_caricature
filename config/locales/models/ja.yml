@@ -1,0 +1,23 @@
+ja:
+  activerecord:
+    models:
+      order: オーダー
+    attributes:
+      order:
+        id: ID
+        sample_image_id: サンプルイメージID
+        order_status: オーダー状況
+        flame_size: フレームサイズ
+        premium_wrapping: プレミアムラッピング
+        price: 価格
+        name_kanji: 名前（漢字）
+        name_furigana: 名前（ふりがな）
+        email: メールアドレス
+        line_id: ラインID
+        email_line: メールアドレスかラインID
+        cell_phone_number: 電話番号（携帯）
+        home_phone_number: 電話番号（家）
+        postal_code: 郵便番号
+        address1: お届け先（都道府県市区町）
+        address2: お届け先（村番地など）
+        comment: コメント
