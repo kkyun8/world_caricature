@@ -1332,11 +1332,19 @@ pre {
     color: #6c757d;
     opacity: 1; }
   .form-control::placeholder {
-    color: #6c757d;
+    /* color down */
+    color: #6c757d58;
     opacity: 1; }
   .form-control:disabled, .form-control[readonly] {
     background-color: #e9ecef;
     opacity: 1; }
+
+
+input[type=number].form-control::-webkit-inner-spin-button,
+input[type=number].form-control::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 select.form-control:focus::-ms-value {
   color: #495057;
