@@ -147,8 +147,19 @@
               <div class="form-group col-md-6"> <label><b>名前（ふりがな）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_furigana" type="text" class="form-control" placeholder="やまだたろう"> </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>メール</b></label> <input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com"> </div>
-              <div class="form-group col-md-6"> <label><b>ラインID</b></b><span class="text-danger">文字</span></label> <input v-model="order.line_id" type="text" class="form-control" placeholder="lindid"> </div>
+              <div class="form-group col-md-6"> <label><b>メール</b></label> <input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com">
+                <div class="form-group py-2">
+                  <a class="btn btn-outline-info" style="width:24%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
+                  <a class="btn btn-outline-info" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
+                  <a class="btn btn-outline-info" style="width:24%; color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
+                  <a class="btn btn-outline-info" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
+                </div>
+              </div>
+              <div class="form-group col-md-6"> <label><b>ラインID</b><span class="text-danger">文字</span></label> <input v-model="order.line_id" type="text" class="form-control" placeholder="lindid">
+                <div class="form-group py-2">
+                  <a class="btn btn-outline-info w-100" style="color:#00c300" href="#"><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
+                </div>
+              </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6"> <label><b>電話番号（携帯）</b><span class="text-danger">＊半角数字11桁のみ</span></label> <input v-model="order.cell_phone_number" type="number" class="form-control" placeholder="09012345678"> </div>
