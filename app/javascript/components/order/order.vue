@@ -135,7 +135,7 @@
     <div class="container">
       <div class="row py-3">
         <div class="mx-auto col-lg-8 col-10">
-          <h1 class="my-2">注文者情報</h1>
+          <h1 id="customerForm" class="my-2">注文者情報</h1>
         </div>
       </div>
       <alert v-bind="{ 'show_alert': show_alert, 'error_messages': error_messages }"  class="mx-auto col-md-12 col-lg-6"/>
@@ -147,17 +147,33 @@
               <div class="form-group col-md-6"> <label><b>名前（ふりがな）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_furigana" type="text" class="form-control" placeholder="やまだたろう"> </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>メール</b></label> <input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com">
+              <div class="form-group col-md-6"> <label><b>メール</b></label><span class="text-danger" style="font-size: 11px">＊簡単ログインは以下のアイコンクリック</span><input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com">
                 <div class="form-group py-2">
-                  <a class="btn btn-outline-info" style="width:24%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
-                  <a class="btn btn-outline-info" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
-                  <a class="btn btn-outline-info" style="width:24%; color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
-                  <a class="btn btn-outline-info" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:24%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
+                  <a class="btn btn-outline-primary" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:24%; color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
                 </div>
               </div>
-              <div class="form-group col-md-6"> <label><b>ラインID</b><span class="text-danger">文字</span></label> <input v-model="order.line_id" type="text" class="form-control" placeholder="lindid">
+              <div class="form-group col-md-6"> <label><b>ラインID</b></label><span class="text-danger" style="font-size: 11px">＊ワンタッチログインはアイコンクリック</span><input v-model="order.line_id" type="text" class="form-control" placeholder="＊小文字・半角英数字と「 . , - , _ 」のみ">
                 <div class="form-group py-2">
-                  <a class="btn btn-outline-info w-100" style="color:#00c300" href="#"><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
+                  <a class="btn btn-outline-primary w-100" style="color:#00c300" href="#"><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12"><label><b><U>写真ファイル送信方法設定</U></b></label></div>
+              <div class="form-group col-md-12">
+                <span class="text-danger">＊あああああああああああああああああああああああああああ</span>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="radio" id="typeEmail" name="imageSendType" value="email" v-model="order.sendType"><label for="typeEmail">メールで送信</label>
+                <div class="form-control" style="height:100px; border: 1px solid">
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="radio" id="typeLine" name="imageSendType" value="line" v-model="order.sendType"><label for="typeLine">ラインで送信</label>
+                <div class="form-control" style="height:100px; border: 1px solid">
                 </div>
               </div>
             </div>
@@ -171,7 +187,7 @@
                 <div class="input-group-append"><button class="btn btn-primary" type="button">住所取得</button></div>
               </div>
             </div>
-            <div class="form-group"><label><b>お届け先（都道府県市区町）</b></label><input v-model="order.address1" type="text" class="form-control" placeholder="東京都豊島区"></div>
+            <div class="form-group"><label><b>お届け先（都道府県市区町）</b></label><input id="address1" v-model="order.address1" type="text" class="form-control" placeholder="東京都豊島区"></div>
             <div class="form-group"><label><b>お届け先（村番地など）</b></label><input v-model="order.address2" type="text" class="form-control" placeholder="東池袋1-1-1　101号"></div>
             <div class="form-group"><label><b>コメント</b></label>
               <textarea v-model="order.comment" class="form-control"></textarea>
@@ -243,6 +259,7 @@ export default {
         name_furigana: '',
         email: '',
         line_id: '',
+        sendType: 'email',
         cell_phone_number: '',
         home_phone_number: '',
         postal_code: '',
@@ -256,8 +273,11 @@ export default {
       wrapping_price: 0,
     }
   },
-
-  mounted: function(){
+  created: function() {
+    //画面の最上に
+    scrollTo(0, 0);
+  },
+  mounted: function() {
     this.getSampleImage();
   },
 
@@ -283,6 +303,8 @@ export default {
 
           // みぎにデータを登録するobject
           this.order.address1 = result.allAddress
+          document.get
+          document.getElementById('address1').focus().scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       },(error) => {
 
@@ -358,6 +380,7 @@ export default {
             response.data.messages.forEach(element => {
               this.error_messages.push(element)
               this.show_alert = true
+              document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
             });
           }else if (response.data.result == 'SUCCESS') {
 
