@@ -103,7 +103,7 @@ export default {
 
     ]),
 
-    //infinite-loadingのクラス宣言
+    // TODO ロジック修正予定infinite-loadingのクラス宣言
     // railsのsqlで範囲を指定することでSQL一回で全データ取得することを修正する予定
     infiniteHandler($state) {
       axios.get(api, { timeout:5000 },).then(({ data }) => {
