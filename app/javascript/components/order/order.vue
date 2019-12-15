@@ -366,6 +366,7 @@ export default {
     * オーダー作成
     */
     createOrder: function(){
+      //TODO 認証について
       axios.defaults.headers.common = {
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -375,7 +376,7 @@ export default {
 
       axios.post('/api/orders/', this.order).then((response) => {
         this.error_messages = []
-        if (response.status === 200){
+        if(response.status === 200){
           if(response.data.result == 'FAIL') {
             response.data.messages.forEach(element => {
               this.error_messages.push(element)

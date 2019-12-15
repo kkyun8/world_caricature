@@ -1,12 +1,15 @@
 class Api::OrdersController < ApplicationController
 
-  def index
+  def show
+    @order = Order.find_by(order_number: params[:order_number])
+
+    render json: { result: 'SUCCESS', message: 'getData', order: @order }
   end
 
   def create
     @order = Order.new(order_params)
+    
     if @order.save
-
       render json: { result: 'SUCCESS', order: @order }
     else
       render json: { result: 'FAIL', messages: @order.errors.full_messages, order: @order}
