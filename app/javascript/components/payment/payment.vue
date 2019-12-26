@@ -36,17 +36,10 @@
               <li class="list-group-item">
                 <h5 class="card-title">コメント</h5>{{order.comment}}
               </li>
-              <li class="list-group-item">
-                <div class="card-body">
-                  <a v-bind:herf="order_url" class="btn btn-primary w-100">
-                    <h4 class="m-0 p-0"> 注文情報を修正</h4>
-                  </a>
-                </div>
-              </li>
             </ul>
           </div>
         </div>
-        <patment-option :order="order">
+        <patment-option :order="order" >
         </patment-option>
       </div>
     </div>
@@ -55,7 +48,7 @@
 </template>
 <script>
 import axios from 'axios'
-import PaymentOption from './payment_option.vue'
+import PaymentOption from './payment_option'
 
 export default {
   components: {
@@ -82,7 +75,8 @@ export default {
         address2: '',
         comment: '',
         created_at: '',
-        updated_at: ''
+        updated_at: '',
+        checkout: false
       },
     }
   },
@@ -92,9 +86,6 @@ export default {
     this.getOrderInfomation()
   },
   computed: {
-    order_url: function(){
-      return '/sample_images/'+ this.order.sample_image_id + '/order'
-    } 
   },
   mounted: function () {
   },

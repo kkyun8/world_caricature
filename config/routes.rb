@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :sample_images
     resources :orders, param: :order_number
     resources :payments
+    post 'square_payment', to: 'square_payment#charge_card'
   end
   
 end
