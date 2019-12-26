@@ -201,7 +201,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="row">
-              <div class="col-md-6 align-items-center p-3" style=""><a class="btn btn-outline-primary w-100" href="/sample_images">サンプルイメージ一覧に戻る<i class="fa fa-backward"></i> </a></div>
+              <div class="col-md-6 align-items-center p-3" style=""><a class="btn btn-outline-primary w-100" @click="modalShow = !modalShow" >サンプルイメージ一覧に戻る<i class="fa fa-backward"></i> </a></div>
               <div class="col-md-6 align-items-center p-3" style=""><a class="btn btn-primary w-100" v-on:click="createOrder" ><i class="fa fa-arrow-circle-right"></i>支払いに進む</a></div>
             </div>
           </div>
@@ -231,8 +231,8 @@
 
 <script>
 import axios from 'axios';
-import CustomerInfomation from './customer_infomation.vue'
-import Alert from '../common/alert/alert.vue'
+import CustomerInfomation from './customer_infomation'
+import Alert from '../common/alert/alert'
 
 export default {
   props: ['id']
@@ -240,7 +240,7 @@ export default {
 
   components: {
     'customer-info': CustomerInfomation,
-    'alert': Alert
+    'alert': Alert,
   },
 
   data: function(){
@@ -360,6 +360,13 @@ export default {
       const cell_phone_number_check = new RegExp(/^([0-9]{3})-([0-9]{3})-([0-9]{4})+$/);
       //内線電話 10桁
       const home_phone_number_check = new RegExp(/^([0-9]{2})-([0-9]{3})-([0-9]{4})+$/);
+    },
+
+    /**
+    * オーダー情報読み込み
+    */
+    selectOrder: function(){
+
     },
 
     /**
