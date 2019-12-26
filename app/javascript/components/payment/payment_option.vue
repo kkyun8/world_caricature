@@ -34,79 +34,42 @@
           <div class="card border-primary mb-5">
             <div class="card-header">
               <strong>クレジットカード</strong>
-              <small>カード情報を記入してください。</small>
+              <br>
+              <small style="color:red;">＊ワルカリではウェブ決済サービス（square）を利用してるので安全です。
+                <br>squareについてはhttps://developer.squareup.com/jp/jaを参考してください。
+                <br>＊入力フォームが見えない場合、インターネットが接続されてるかご確認ください。
+              </small>
             </div>
             <div class="card-body align-items-center">
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
-                    <label for="name">名前</label>
-                    <input class="form-control" id="name" type="text" placeholder="Enter your name">
+                    <div id="sq-card-number"></div>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-4">
                   <div class="form-group">
-                    <label for="ccnumber">番号</label>
-                    <div class="input-group">
-                      <input class="form-control" type="text" placeholder="0000 0000 0000 0000" autocomplete="email">
-                      <div class="input-group-append">
-                        <span class="input-group-text">
-                          <i class="mdi mdi-credit-card"></i>
-                        </span>
-                      </div>
-                    </div>
+                    <div id="sq-expiration-date"></div>
                   </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-sm-4">
-                  <label for="ccmonth">月</label>
-                  <select class="form-control" id="ccmonth">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                  </select>
-                </div>
-                <div class="form-group col-sm-4">
-                  <label for="ccyear">年</label>
-                  <select class="form-control" id="ccyear">
-                    <option value="2014">2014</option>
-                    <option value="2015">2015</option>
-                    <option value="2016">2016</option>
-                    <option value="2017">2017</option>
-                    <option value="2018">2018</option>
-                    <option value="2019">2019</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                  </select>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label for="cvv">CVV/CVC</label>
-                    <input class="form-control" id="cvv" type="text" placeholder="123">
+                    <div id="sq-cvv"></div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div id="sq-postal-code"></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer">
               <div class="input-group">
-                <button href="#" class="btn btn-primary w-100">
-                  <h3 class="m-0 p-0"> 決済</h3>
+                <button id="sq-creditcard" class="btn btn-primary w-100" @click="onGetCardNonce($event)">
+                  <h3 class="m-0 p-0">決済</h3>
                 </button>
               </div>
             </div>
@@ -133,12 +96,137 @@
 </template>
 
 <script>
+// import squareConnect from 'square-connect'
+import axios from 'axios'
+
 export default {
-  props: ['order']
-  ,
+  name: 'paymentForm',
+  props: ['order'],
+  
+  data: function() {
+    return {
+
+    }
+  },
+  mounted: function() {
+          // Create and initialize a payment form object
+      this.paymentForm = new SqPaymentForm({
+        // Initialize the payment form elements
+        
+        //TODO: Replace with your sandbox application ID
+        applicationId: "sandbox-sq0idb-avt1XfxvYu5ZB3SD-SkJtw",
+
+        inputClass: 'sq-input',
+        autoBuild: false,
+        // Customize the CSS for SqPaymentForm iframe elements
+        inputStyles: [{
+            fontSize: '16px',
+            lineHeight: '24px',
+            padding: '16px',
+            placeholderColor: '#a0a0a0',
+            backgroundColor: 'transparent',
+        }],
+        // Initialize the credit card placeholders
+        cardNumber: {
+            elementId: 'sq-card-number',
+            placeholder: 'カード番号'
+        },
+        cvv: {
+            elementId: 'sq-cvv',
+            placeholder: 'CVV'
+        },
+        expirationDate: {
+            elementId: 'sq-expiration-date',
+            placeholder: 'MM/YY'
+        },
+        postalCode: {
+            elementId: 'sq-postal-code',
+            placeholder: '郵便番号'
+        },
+        // SqPaymentForm callback functions
+        callbacks: {
+            /*
+            * callback function: cardNonceResponseReceived
+            * Triggered when: SqPaymentForm completes a card nonce request
+            */
+            cardNonceResponseReceived: function (errors, nonce, cardData) {
+            if (errors) {
+                // Log errors from nonce generation to the browser developer console.
+                console.error('Encountered errors:');
+                errors.forEach(function (error) {
+                    console.error('  ' + error.message);
+                });
+                alert('Encountered errors, check browser developer console for more details');
+                return;
+            }
+            
+               alert(`The generated nonce is:\n${nonce}`);
+               //TODO: Replace alert with code in step 2.1
+                fetch('/api/square_payment', {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    nonce: nonce
+                  })
+                })
+              .catch(err => {
+                alert('Network error: ' + err);
+              })
+              .then(response => {
+                if (!response.ok) {
+                  return response.text().then(errorInfo => Promise.reject(errorInfo));
+                }
+                return response.text();
+              })
+              .then(data => {
+                console.log(JSON.stringify(data));
+                alert('Payment complete successfully!\nCheck browser developer console for more details');
+              })
+              .catch(err => {
+                console.error(err);
+                alert('Payment failed to complete!\nCheck browser developer console for more details');
+              });
+            }
+        }
+      });
+      this.paymentForm.build();
+  },
+  methods: {
+    onGetCardNonce: function(event) {
+      
+      event.preventDefault();
+      this.paymentForm.requestCardNonce();
+    },
+  }
 }
 </script>
 
 <style>
+/* Define how SqPaymentForm iframes should look */
+.sq-input {
+  height: 56px;
+  box-sizing: border-box;
+  border: 1px solid #E0E2E3;
+  background-color: white;
+  border-radius: 6px;
+  display: inline-block;
+  -webkit-transition: border-color .2s ease-in-out;
+     -moz-transition: border-color .2s ease-in-out;
+      -ms-transition: border-color .2s ease-in-out;
+          transition: border-color .2s ease-in-out;
+}
+
+/* Define how SqPaymentForm iframes should look when they have focus */
+.sq-input--focus {
+  border: 1px solid #12bbad;
+}
+
+/* Define how SqPaymentForm iframes should look when they contain invalid values */
+.sq-input--error {
+  border: 1px solid #E02F2F;
+}
 
 </style>

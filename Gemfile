@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.4'
 
+# add square
+gem 'square.rb'
 # add rails-i18n
 gem 'rails-i18n'
 # add foreman

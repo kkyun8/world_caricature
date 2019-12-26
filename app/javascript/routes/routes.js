@@ -1,11 +1,11 @@
 import Vue from 'vue/dist/vue.esm.js'
 import VueRouter from 'vue-router'
-import Index from '../components/index.vue'
-import SampleImages from '../components/sample_images/sample_images.vue'
-import AboutTheOrder from '../components/about_the_order/about_the_order.vue'
-import Order from '../components/order/order.vue'
-import Contact from '../components/contact/contact.vue'
-import Payment from '../components/payment/payment.vue'
+import Index from '../components/index'
+import SampleImages from '../components/sample_images/sample_images'
+import AboutTheOrder from '../components/about_the_order/about_the_order'
+import Order from '../components/order/order'
+import Contact from '../components/contact/contact'
+import Payment from '../components/payment/payment'
 
 Vue.use(VueRouter)
 
