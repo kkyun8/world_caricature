@@ -37,11 +37,17 @@
               <br>
               <small style="color:red;">＊ワルカリではウェブ決済サービス（square）を利用してるので安全です。
                 <br>squareについてはhttps://developer.squareup.com/jp/jaを参考してください。
-                <br>＊入力フォームが見えない場合、インターネットが接続されてるかご確認ください。
               </small>
             </div>
-            <div class="card-body align-items-center">
-              <div class="row">
+              <div class="card-body align-items-center">
+                <div class="row" v-show="showPaymentFormFlg">
+                  <div class="col-sm-12">
+                      <div class="form-group" slot="spinner">
+                        <div class="loader"></div>
+                      </div>
+                   </div>
+               </div>
+               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
                     <div id="sq-card-number"></div>
@@ -49,30 +55,31 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <div id="sq-expiration-date"></div>
                   </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <div id="sq-cvv"></div>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <div id="sq-postal-code"></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer">
               <div class="input-group">
+                <small style="color:red;">＊入力フォームが見えない場合、インターネット接続状態をご確認ください。</small>
                 <button id="sq-creditcard" class="btn btn-primary w-100" @click="onGetCardNonce($event)">
                   <h3 class="m-0 p-0">決済</h3>
                 </button>
               </div>
             </div>
+            <input id="price" type="hidden" name="price">
+            <input id="order-number" type="hidden" name="order_number">
+            <input id="order-id" type="hidden" name="order_id">
+            <input id="sample-image-id" type="hidden" name="sample_image_id">
+            <input id="payment-result" type="hidden" v-model="paymentResult">
           </div>
           <div class="card border-primary">
             <div class="card-header">
@@ -84,7 +91,7 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <button href="#" class="form-control btn btn-dark my-2">Google pay</button>
-                    <button href="#" class="form-control btn btn-dark my-2">Apple pay</button>
+                    <button id="sq-apple-pay" class="button-apple-pay"></button>
                     <button href="#" class="form-control btn my-2 btn-success">Line pay</button>
                     <button href="#" class="form-control btn my-2 btn-danger">Rakuten pay</button>
                   </div>
@@ -96,24 +103,35 @@
 </template>
 
 <script>
-// import squareConnect from 'square-connect'
+import Alert from '../common/alert/alert'
 import axios from 'axios'
+import dotenv from 'dotenv'
 
 export default {
   name: 'paymentForm',
   props: ['order'],
-  
+    
+  components: {
+    'alert': Alert,
+  },
   data: function() {
     return {
-
+      showPaymentFormFlg: true,
+      paymentResult: false,
+      result: ''
+    }
+  },
+  watch: {
+    paymentResult: function(){
+      this.paymentForm.destroy();
     }
   },
   mounted: function() {
-          // Create and initialize a payment form object
+      // Create and initialize a payment form object
       this.paymentForm = new SqPaymentForm({
         // Initialize the payment form elements
         
-        //TODO: Replace with your sandbox application ID
+        //Replace with your sandbox application ID
         applicationId: "sandbox-sq0idb-avt1XfxvYu5ZB3SD-SkJtw",
 
         inputClass: 'sq-input',
@@ -139,10 +157,7 @@ export default {
             elementId: 'sq-expiration-date',
             placeholder: 'MM/YY'
         },
-        postalCode: {
-            elementId: 'sq-postal-code',
-            placeholder: '郵便番号'
-        },
+        postalCode: false,
         // SqPaymentForm callback functions
         callbacks: {
             /*
@@ -150,55 +165,90 @@ export default {
             * Triggered when: SqPaymentForm completes a card nonce request
             */
             cardNonceResponseReceived: function (errors, nonce, cardData) {
+            
             if (errors) {
-                // Log errors from nonce generation to the browser developer console.
-                console.error('Encountered errors:');
-                errors.forEach(function (error) {
-                    console.error('  ' + error.message);
-                });
-                alert('Encountered errors, check browser developer console for more details');
+              let error_messages = ''
+              
+              // Log errors from nonce generation to the browser developer console.
+              errors.forEach(function (error) {
+                let name = ""
+                switch (error.field){
+                  case 'cardNumber':
+                    name = 'カード番号'
+                    break
+                  case 'cvv':
+                    name = 'CVV番号'
+                    break
+                  case 'expirationDate':
+                    name = '有効期限'
+                    break
+                  case 'postalCode':
+                    name = '郵便番号'
+                    break
+                  default:
+                    name = error.field
+                }
+                  const message = 'に誤りがあります。確認してください。'
+                  error_messages = error_messages +　'\n'　+ name + message
+              });
+                alert(error_messages)
                 return;
             }
-            
-               alert(`The generated nonce is:\n${nonce}`);
-               //TODO: Replace alert with code in step 2.1
-                fetch('/api/square_payment', {
-                  method: 'POST',
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    nonce: nonce
-                  })
-                })
-              .catch(err => {
-                alert('Network error: ' + err);
+            const price = document.getElementById('price').value
+            const order_number = document.getElementById('order-number').value
+            const order_id = document.getElementById('order-id').value
+            const sample_image_id = document.getElementById('sample-image-id').value
+
+            // TODO: 決済したか確認、payament_flg = true なら表示しない
+            fetch('/api/square_payment', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                nonce: nonce,
+                price: price,
+                order_number: order_number,
+                order_id: order_id,
+                sample_image_id: sample_image_id
               })
-              .then(response => {
-                if (!response.ok) {
-                  return response.text().then(errorInfo => Promise.reject(errorInfo));
-                }
-                return response.text();
-              })
-              .then(data => {
-                console.log(JSON.stringify(data));
-                alert('Payment complete successfully!\nCheck browser developer console for more details');
-              })
-              .catch(err => {
-                console.error(err);
-                alert('Payment failed to complete!\nCheck browser developer console for more details');
-              });
-            }
+            })
+            .catch(err => {
+              alert('Network error: ' + err);
+            })
+            .then(response => {
+              if (!response.ok) {
+                return response.text().then(errorInfo => Promise.reject(errorInfo));
+              }
+
+              document.getElementById('payment-result').value = true;
+              
+              return response.text();
+            })
+            .then(data => {
+              console.log(JSON.stringify(data));
+              alert('Payment complete successfully!\nCheck browser developer console for more details');
+            })
+            .catch(err => {
+              console.error(err);
+              alert('Payment failed to complete!\nCheck browser developer console for more details');
+            });
+          },
         }
       });
       this.paymentForm.build();
+      this.showPaymentFormFlg = false;
   },
   methods: {
     onGetCardNonce: function(event) {
-      
+      document.getElementById('price').value = this.order.price;
+      document.getElementById('order-number').value = this.order.order_number;
+      document.getElementById('order-id').value = this.order.id;
+      document.getElementById('sample-image-id').value = this.order.sample_image_id;
       event.preventDefault();
       this.paymentForm.requestCardNonce();
+      
     },
   }
 }

@@ -6,6 +6,7 @@ import AboutTheOrder from '../components/about_the_order/about_the_order'
 import Order from '../components/order/order'
 import Contact from '../components/contact/contact'
 import Payment from '../components/payment/payment'
+import NotFound from '../components/common/not_found'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,7 @@ export default new VueRouter({
     { path: '/about_the_order', component: AboutTheOrder },
     { path: '/sample_images/:id/order', component: Order, props: true },
     { path: '/payment/:order_number', component: Payment },
+    { path: '/not_found/:order_number', component: NotFound },
     { path: '/contact', component: Contact }
   ],
 })

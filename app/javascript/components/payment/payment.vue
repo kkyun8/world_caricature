@@ -81,8 +81,9 @@ export default {
     }
   },
   created: function () {
+    //画面の最上に
+    scrollTo(0, 0);
     // api.get order data 返す
-    
     this.getOrderInfomation()
   },
   computed: {
@@ -107,10 +108,13 @@ export default {
         
         if(response.status == 200){
           this.order = response.data.order
-          console.log(this.order)
+          if (this.order.order_status !== 1) this.$router.push('/not_found')
+
+        }else{
+          this.$router.push('/not_found')
         }
       },(error) => {
-      
+        this.$router.push('/not_found')
       });
     },
     sethyphe(value){
