@@ -251,7 +251,7 @@ export default {
       order: {
         sample_image_id: '',
         order_number: '',
-        order_status: '',
+        order_status: 1,
         flame_size: 'M',
         premium_wrapping: false,
         price: 0,
@@ -391,8 +391,10 @@ export default {
               document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
             });
           }else if (response.data.result == 'SUCCESS') {
-
             this.show_alert = false
+            if(confirm('オーダを登録すると注文情報を変更できません。よろしいですか？')){
+              this.$router.push('/payment/' + response.data.order.order_number)
+            }
           }
         }
       },(error) => {

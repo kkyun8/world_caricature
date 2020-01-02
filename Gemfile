@@ -3,14 +3,18 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.4'
 
+# add foreman
+gem 'foreman'
+
+gem 'rake'
+gem 'dotenv-rails'
 # add square
 gem 'square.rb'
 # add rails-i18n
 gem 'rails-i18n'
-# add foreman
-gem 'foreman'
+
 # add bootstrap (depandency- jquery-rails)
-gem 'bootstrap', '~> 4.3.1'
+gem 'bootstrap'
 gem 'jquery-rails'
 gem 'jquery-turbolinks'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -46,6 +50,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
+# need?
 gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do

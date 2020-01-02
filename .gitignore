@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+/vendor/bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -22,6 +23,8 @@
 
 /public/assets
 .byebug_history
+
+/Gemfile.lock
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

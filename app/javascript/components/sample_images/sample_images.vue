@@ -64,7 +64,7 @@
 <script>
 import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
-import Image from "./image.vue";
+import Image from "./image";
 import { mapMutations, mapGetters } from "vuex";
 import { timeout } from "q";
 
@@ -72,7 +72,7 @@ const api = "/api/sample_images";
 
 export default {
   components: {
-    // imageが表示されるcomponentを設定 ./image.vue
+    // imageが表示されるcomponentを設定 ./image
     "v-image": Image,
     InfiniteLoading
   },
@@ -82,7 +82,7 @@ export default {
       start: 0,
       images: [],
       // loading画面表示
-      viewKeywords: []
+      viewKeywords: [],
     };
   },
 
@@ -120,9 +120,11 @@ export default {
 
     // TODO ロジック修正予定infinite-loadingのクラス宣言
     infiniteHandler($state) {
-
+      if(this.notDataFlg) return
+      
       axios.get(api + "/?start=" + this.start).then(response => {
         if(!response.data.sample_images.length){
+          this.notDataFlg = true
           $state.complete();
           //TODO END メッセージ
         }else{
