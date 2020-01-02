@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_12_145106) do
+ActiveRecord::Schema.define(version: 2019_12_30_121301) do
 
   create_table "data_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "type_name", null: false
@@ -61,8 +61,15 @@ ActiveRecord::Schema.define(version: 2019_12_12_145106) do
     t.integer "order_id", null: false
     t.integer "sample_image_id", null: false
     t.integer "price", null: false
-    t.boolean "payment_flg", default: false
-    t.string "payment_options", null: false
+    t.string "currency"
+    t.string "source_type"
+    t.string "card_brand"
+    t.string "last_4"
+    t.datetime "square_created_at"
+    t.string "square_id"
+    t.string "square_order_id"
+    t.string "receipt_number"
+    t.string "receipt_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
