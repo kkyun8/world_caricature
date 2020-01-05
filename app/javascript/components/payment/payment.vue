@@ -39,7 +39,7 @@
             </ul>
           </div>
         </div>
-        <patment-option :order="order" :payment_result="payment_result">
+        <patment-option :order="order" >
         </patment-option>
       </div>
     </div>
@@ -78,7 +78,6 @@ export default {
         updated_at: '',
         checkout: false
       },
-      payment_result: ''
     }
   },
   created: function () {

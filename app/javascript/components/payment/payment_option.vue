@@ -79,10 +79,6 @@
             <input id="order-number" type="hidden" name="order_number">
             <input id="order-id" type="hidden" name="order_id">
             <input id="sample-image-id" type="hidden" name="sample_image_id">
-            <!-- <input id="payment-result" type="hidden" v-model="paymentResult"> -->
-            <input id="order-update" type="hidden" v-model="orderUpdateResult">
-            <input id="payment_result" type="text" v-model="payment_result">
-            <input type="text" v-model="test">
           </div>
           <div class="card border-primary">
             <div class="card-header">
@@ -108,13 +104,11 @@
 <script>
 import Alert from '../common/alert/alert'
 import axios from 'axios'
-import dotenv from 'dotenv'
 import { async } from 'q'
 
 export default {
   name: 'paymentForm',
-  props: 
-    ['order','payment_result']
+  props: ['order']
   ,
   components: {
     'alert': Alert,
@@ -122,164 +116,143 @@ export default {
   data: function() {
     return {
       showPaymentFormFlg: true,
-      // paymentResult: false,
-      orderUpdateResult: false,
-      test: this.payment_result
     }
   },
-      //alert(val);
-      //this.paymentForm.destroy();
-      // if(val){
-      //   const order_id = document.getElementById('order-id').value
-      //   this.updateOrderStatus(order_id)
-      // }
-      // return console.log('paymentResult')
-  watch:{
-
-  },
   mounted: function() {
-      // Create and initialize a payment form object
-      this.paymentForm = new SqPaymentForm({
-        // Initialize the payment form elements
-        
-        //Replace with your sandbox application ID
-        // TODO: applicationid -> .envから取得
-        applicationId: "sandbox-sq0idb-avt1XfxvYu5ZB3SD-SkJtw",
+    const app_id = process.env.SQUARE_APPLICATION_ID;
+    // Create and initialize a payment form object
+    this.paymentForm = new SqPaymentForm({
+      // Initialize the payment form elements
+      //Replace with your sandbox application ID
+      applicationId: app_id,
+      inputClass: 'sq-input',
+      autoBuild: false,
 
-        inputClass: 'sq-input',
-        autoBuild: false,
-        // Customize the CSS for SqPaymentForm iframe elements
-        inputStyles: [{
-            fontSize: '16px',
-            lineHeight: '24px',
-            padding: '16px',
-            placeholderColor: '#a0a0a0',
-            backgroundColor: 'transparent',
-        }],
-        // Initialize the credit card placeholders
-        cardNumber: {
-            elementId: 'sq-card-number',
-            placeholder: 'カード番号'
-        },
-        cvv: {
-            elementId: 'sq-cvv',
-            placeholder: 'CVV'
-        },
-        expirationDate: {
-            elementId: 'sq-expiration-date',
-            placeholder: 'MM/YY'
-        },
-        postalCode: false,
-        // SqPaymentForm callback functions
-        callbacks: {
-          // requestCardNonce -> callback return
-          // callbacks -> square api -> success -> payment insert -> order update
+      // Customize the CSS for SqPaymentForm iframe elements
+      inputStyles: [{
+          fontSize: '16px',
+          lineHeight: '24px',
+          padding: '16px',
+          placeholderColor: '#a0a0a0',
+          backgroundColor: 'transparent',
+      }],
+      // Initialize the credit card placeholders
+      cardNumber: {
+          elementId: 'sq-card-number',
+          placeholder: 'カード番号'
+      },
+      cvv: {
+          elementId: 'sq-cvv',
+          placeholder: 'CVV'
+      },
+      expirationDate: {
+          elementId: 'sq-expiration-date',
+          placeholder: 'MM/YY'
+      },
+      postalCode: false,
+      // SqPaymentForm callback functions
+      callbacks: {
+        // requestCardNonce -> callback return
+        // callbacks -> square api -> success -> payment insert -> order update
 
-          /*
-          * callback function: cardNonceResponseReceived
-          * Triggered when: SqPaymentForm completes a card nonce request
-          */
-          cardNonceResponseReceived: async function (errors, nonce, cardData) {
+        /*
+        * callback function: cardNonceResponseReceived
+        * Triggered when: SqPaymentForm completes a card nonce request
+        */
+        cardNonceResponseReceived: async function (errors, nonce, cardData) {
 
+          if (errors) {
+            let error_messages = ''
 
-            // this.testResulta = 'result';
-            // const test = document.getElementById('payment-result').value
-            // if(test == 'true'){
-            //   document.getElementById('payment-result').value = false;
-            // }else{
-            //   document.getElementById('payment-result').value = true;
-            // }
-            
-            if (errors) {
-              let error_messages = ''
-
-              // Log errors from nonce generation to the browser developer console.
-              errors.forEach(function (error) {
-                let name = ""
-                switch (error.field){
-                  case 'cardNumber':
-                    name = 'カード番号'
-                    break
-                  case 'cvv':
-                    name = 'CVV番号'
-                    break
-                  case 'expirationDate':
-                    name = '有効期限'
-                    break
-                 case 'postalCode':
-                    name = '郵便番号'
-                    break
-                  default:
-                    name = error.field
+            // Log errors from nonce generation to the browser developer console.
+            errors.forEach(function (error) {
+            let name = ""
+            switch (error.field){
+              case 'cardNumber':
+                name = 'カード番号'
+                break
+              case 'cvv':
+                name = 'CVV番号'
+                break
+              case 'expirationDate':
+                name = '有効期限'
+                break
+              case 'postalCode':
+                name = '郵便番号'
+                break
+              default:
+                name = error.field
                 }
-                const message = 'に誤りがあります。確認してください。'
-                error_messages = error_messages +　'\n'　+ name + message
-              });
+              const message = 'に誤りがあります。確認してください。'
+              error_messages = error_messages +　'\n'　+ name + message
+            });
 
-              alert(error_messages)
-            }else{
-              
-              try {
-                // payment情報登録
-                const price = document.getElementById('price').value
-                const order_number = document.getElementById('order-number').value
-                const order_id = document.getElementById('order-id').value
-                const sample_image_id = document.getElementById('sample-image-id').value
+            alert(order_number)
+            alert(error_messages)
 
-                // TODO: 決済したか確認、payament_flg = true なら表示しない
-                fetch('/api/square_payment', {
-                  method: 'POST',
-                  headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                  body: JSON.stringify({
+          }else{
+            try {
+              // payment情報登録
+              const price = document.getElementById('price').value
+              const order_number = document.getElementById('order-number').value
+              const order_id = document.getElementById('order-id').value
+              const sample_image_id = document.getElementById('sample-image-id').value
+
+              // TODO: 決済したか確認、payament_flg = true なら表示しない
+              fetch('/api/square_payment', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+                body: JSON.stringify({
                   nonce: nonce,
                   price: price,
                   order_number: order_number,
                   order_id: order_id,
                   sample_image_id: sample_image_id
-                  })
                 })
-                .catch(err => {
-                  alert('Network error: ' + err);
-                })
-                .then(response => {
-                  if (!response.ok) {
-                    // TODO: エラーページ
-                    alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
-                  }else{
-                    //オーダ状態を決済済み（２）に更新
-                    axios.put('/api/orders/' + order_number).then(response => {
-                      if(response.status == 200){
-                        if(response.data.result == 'SUCCESS') {
-                          const redirect_order_number = response.data.order.order_number
-                          const url = response.data.redirect.replace('*',redirect_order_number)
-                          window.location = url
-                        }
-                      }else{
+              })
+              .catch(err => {
+                alert('Network error: ' + err);
+              })
+              .then(response => {
+                if (!response.ok) {
+                  // TODO: エラーページ
+                  alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
+                }else{
+                  //オーダ状態を決済済み（２）に更新
+                  axios.put('/api/orders/' + order_number).then(response => {
+                    if(response.status == 200){
+                      if(response.data.result == 'SUCCESS') {
+                        const redirect_order_number = response.data.order.order_number
+                        const url = response.data.redirect.replace('*',redirect_order_number)
+                        // 決済完了ページに遷移
+                        window.location = url
                       }
-                    })
-                    .catch(err => {
-                    }); 
-                  }
-                })
-                .catch(err => {
-                  console.error(err);
-                  alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
-                });
+                    }else{
+                    }
+                  })
+                  .catch(err => {
+                  }); 
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
+              });
               
-              } catch (error) {
-                console.log(error)
-                alert(error)
-              }
+            } catch (error) {
+              console.log(error)
+              alert(error)
             }
-          },
-        }
-      });
+          }
+        },
+      }
+    });
       this.paymentForm.build();
       this.showPaymentFormFlg = false;
-  },
+    },
   methods: {
     onGetCardNonce: function(event) {
       document.getElementById('price').value = this.order.price;
@@ -289,10 +262,6 @@ export default {
       event.preventDefault();
       this.paymentForm.requestCardNonce();
     },
-    updateTest() {
-      this.payment_result = 'a';
-      alert(this.payment_result)
-    }
   }
 }
 </script>
