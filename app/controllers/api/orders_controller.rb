@@ -14,17 +14,21 @@ class Api::OrdersController < ApplicationController
     else
       render json: { result: 'FAIL', messages: @order.errors.full_messages, order: @order}
     end
-
-    # @object = Object.new(params[:object])
-    # if @object.save
-    #   flash[:success] = "Object successfully created"
-    #   redirect_to @object
-    # else
-    #   flash[:error] = "Something went wrong"
-    #   render 'new'
-    # end
   end
   
+  def update
+    @order = Order.find_by(order_number: params[:order_number])
+    @order.order_status = 2
+    
+    if @order.save(validate: false)
+      render json: { result: 'SUCCESS', order: @order, redirect: ENV["ORDER_UPDATE_REDIRECT_URL"] }
+      # /payment/:order_number/success
+      # redirect_to "/payment/#{@order.order_number}/success"
+    else
+      render json: { result: 'FAIL', messages: @order.errors.full_messages, order: @order}
+    end
+  end
+
   # ForbiddenAttributesError対処
   private
     def order_params

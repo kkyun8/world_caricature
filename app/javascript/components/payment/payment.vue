@@ -39,7 +39,7 @@
             </ul>
           </div>
         </div>
-        <patment-option :order="order" >
+        <patment-option :order="order" :payment_result="payment_result">
         </patment-option>
       </div>
     </div>
@@ -78,6 +78,7 @@ export default {
         updated_at: '',
         checkout: false
       },
+      payment_result: ''
     }
   },
   created: function () {
@@ -85,6 +86,11 @@ export default {
     scrollTo(0, 0);
     // api.get order data 返す
     this.getOrderInfomation()
+  },
+  watch: {
+    // payment_result: function(val){
+    //   alert(val)
+    // }
   },
   computed: {
   },
@@ -102,7 +108,6 @@ export default {
       };
 
       const getOrderNumber = this.$route.params['order_number']
-      console.log(getOrderNumber)
 
       axios.get('/api/orders/' + getOrderNumber ).then((response) => {
         
@@ -117,6 +122,7 @@ export default {
         this.$router.push('/not_found')
       });
     },
+
     sethyphe(value){
       
       if (value.length > 7){
