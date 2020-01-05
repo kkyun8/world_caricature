@@ -79,7 +79,10 @@
             <input id="order-number" type="hidden" name="order_number">
             <input id="order-id" type="hidden" name="order_id">
             <input id="sample-image-id" type="hidden" name="sample_image_id">
-            <input id="payment-result" type="hidden" v-model="paymentResult">
+            <!-- <input id="payment-result" type="hidden" v-model="paymentResult"> -->
+            <input id="order-update" type="hidden" v-model="orderUpdateResult">
+            <input id="payment_result" type="text" v-model="payment_result">
+            <input type="text" v-model="test">
           </div>
           <div class="card border-primary">
             <div class="card-header">
@@ -106,25 +109,33 @@
 import Alert from '../common/alert/alert'
 import axios from 'axios'
 import dotenv from 'dotenv'
+import { async } from 'q'
 
 export default {
   name: 'paymentForm',
-  props: ['order'],
-    
+  props: 
+    ['order','payment_result']
+  ,
   components: {
     'alert': Alert,
   },
   data: function() {
     return {
       showPaymentFormFlg: true,
-      paymentResult: false,
-      result: ''
+      // paymentResult: false,
+      orderUpdateResult: false,
+      test: this.payment_result
     }
   },
-  watch: {
-    paymentResult: function(){
-      this.paymentForm.destroy();
-    }
+      //alert(val);
+      //this.paymentForm.destroy();
+      // if(val){
+      //   const order_id = document.getElementById('order-id').value
+      //   this.updateOrderStatus(order_id)
+      // }
+      // return console.log('paymentResult')
+  watch:{
+
   },
   mounted: function() {
       // Create and initialize a payment form object
@@ -132,6 +143,7 @@ export default {
         // Initialize the payment form elements
         
         //Replace with your sandbox application ID
+        // TODO: applicationid -> .envから取得
         applicationId: "sandbox-sq0idb-avt1XfxvYu5ZB3SD-SkJtw",
 
         inputClass: 'sq-input',
@@ -160,15 +172,27 @@ export default {
         postalCode: false,
         // SqPaymentForm callback functions
         callbacks: {
-            /*
-            * callback function: cardNonceResponseReceived
-            * Triggered when: SqPaymentForm completes a card nonce request
-            */
-            cardNonceResponseReceived: function (errors, nonce, cardData) {
+          // requestCardNonce -> callback return
+          // callbacks -> square api -> success -> payment insert -> order update
+
+          /*
+          * callback function: cardNonceResponseReceived
+          * Triggered when: SqPaymentForm completes a card nonce request
+          */
+          cardNonceResponseReceived: async function (errors, nonce, cardData) {
+
+
+            // this.testResulta = 'result';
+            // const test = document.getElementById('payment-result').value
+            // if(test == 'true'){
+            //   document.getElementById('payment-result').value = false;
+            // }else{
+            //   document.getElementById('payment-result').value = true;
+            // }
             
             if (errors) {
               let error_messages = ''
-              
+
               // Log errors from nonce generation to the browser developer console.
               errors.forEach(function (error) {
                 let name = ""
@@ -182,58 +206,74 @@ export default {
                   case 'expirationDate':
                     name = '有効期限'
                     break
-                  case 'postalCode':
+                 case 'postalCode':
                     name = '郵便番号'
                     break
                   default:
                     name = error.field
                 }
-                  const message = 'に誤りがあります。確認してください。'
-                  error_messages = error_messages +　'\n'　+ name + message
+                const message = 'に誤りがあります。確認してください。'
+                error_messages = error_messages +　'\n'　+ name + message
               });
-                alert(error_messages)
-                return;
-            }
-            const price = document.getElementById('price').value
-            const order_number = document.getElementById('order-number').value
-            const order_id = document.getElementById('order-id').value
-            const sample_image_id = document.getElementById('sample-image-id').value
 
-            // TODO: 決済したか確認、payament_flg = true なら表示しない
-            fetch('/api/square_payment', {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                nonce: nonce,
-                price: price,
-                order_number: order_number,
-                order_id: order_id,
-                sample_image_id: sample_image_id
-              })
-            })
-            .catch(err => {
-              alert('Network error: ' + err);
-            })
-            .then(response => {
-              if (!response.ok) {
-                return response.text().then(errorInfo => Promise.reject(errorInfo));
-              }
-
-              document.getElementById('payment-result').value = true;
+              alert(error_messages)
+            }else{
               
-              return response.text();
-            })
-            .then(data => {
-              console.log(JSON.stringify(data));
-              alert('Payment complete successfully!\nCheck browser developer console for more details');
-            })
-            .catch(err => {
-              console.error(err);
-              alert('Payment failed to complete!\nCheck browser developer console for more details');
-            });
+              try {
+                // payment情報登録
+                const price = document.getElementById('price').value
+                const order_number = document.getElementById('order-number').value
+                const order_id = document.getElementById('order-id').value
+                const sample_image_id = document.getElementById('sample-image-id').value
+
+                // TODO: 決済したか確認、payament_flg = true なら表示しない
+                fetch('/api/square_payment', {
+                  method: 'POST',
+                  headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                  body: JSON.stringify({
+                  nonce: nonce,
+                  price: price,
+                  order_number: order_number,
+                  order_id: order_id,
+                  sample_image_id: sample_image_id
+                  })
+                })
+                .catch(err => {
+                  alert('Network error: ' + err);
+                })
+                .then(response => {
+                  if (!response.ok) {
+                    // TODO: エラーページ
+                    alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
+                  }else{
+                    //オーダ状態を決済済み（２）に更新
+                    axios.put('/api/orders/' + order_number).then(response => {
+                      if(response.status == 200){
+                        if(response.data.result == 'SUCCESS') {
+                          const redirect_order_number = response.data.order.order_number
+                          const url = response.data.redirect.replace('*',redirect_order_number)
+                          window.location = url
+                        }
+                      }else{
+                      }
+                    })
+                    .catch(err => {
+                    }); 
+                  }
+                })
+                .catch(err => {
+                  console.error(err);
+                  alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
+                });
+              
+              } catch (error) {
+                console.log(error)
+                alert(error)
+              }
+            }
           },
         }
       });
@@ -248,8 +288,11 @@ export default {
       document.getElementById('sample-image-id').value = this.order.sample_image_id;
       event.preventDefault();
       this.paymentForm.requestCardNonce();
-      
     },
+    updateTest() {
+      this.payment_result = 'a';
+      alert(this.payment_result)
+    }
   }
 }
 </script>
