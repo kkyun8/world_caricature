@@ -30,6 +30,4 @@ https://developers.line.biz/ja/services/messaging-api/
 
 ### プロジェクト実行
 
-    ```
     $ ./bin/server
-    ```
