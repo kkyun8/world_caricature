@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_30_121301) do
+ActiveRecord::Schema.define(version: 2020_01_14_130235) do
 
   create_table "data_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "type_name", null: false
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_12_30_121301) do
     t.integer "sample_image_id", null: false
     t.string "order_number", null: false
     t.integer "order_status", default: 1
+    t.boolean "delflg", default: false, null: false
     t.string "flame_size", default: "M"
     t.boolean "premium_wrapping", default: false
     t.integer "price", null: false
