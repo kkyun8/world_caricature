@@ -30,12 +30,25 @@ export const store = new Vuex.Store({
   //state 宣言
   state: {
     sampleImages: [],
+    //TODO: ENV file
+    postalCodeApiUrl:'https://apis.postcode-jp.com/api/v3/postcodes?',
+    postalCodeApiKey:'apikey=LVKBONNkv4JibbwWXwpwuZUG18Jqjx0q0BfOQoN&',
+    authKey:'QuqFZqA4vLnANV26-EyGr70ZKfg',
   },
   //stateを読み込むことができるgetters宣言
   getters: {
     getSampleImages: function (state) {
       return state.sampleImages
-    }
+    },
+    getPostalCodeApiUrl: function (state) {
+      return state.postalCodeApiUrl
+    },
+    getPostalCodeApiKey: function (state) {
+      return state.postalCodeApiKey
+    },
+    getAuthKey: function (state) {
+      return state.authKey
+    },
   },
   //state変更ができるmutations宣言
   mutations: {

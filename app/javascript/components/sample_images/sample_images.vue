@@ -118,25 +118,20 @@ export default {
   methods: {
     ...mapMutations(["setSampleImages"]),
 
-    // TODO ロジック修正予定infinite-loadingのクラス宣言
+    // TODO: ロジック修正予定infinite-loadingのクラス宣言 検索ロジック変更
     infiniteHandler($state) {
-      if(this.notDataFlg) return
       
-      axios.get(api + "/?start=" + this.start).then(response => {
-        if(!response.data.sample_images.length){
-          this.notDataFlg = true
-          $state.complete();
-          //TODO END メッセージ
-        }else{
-          response.data.sample_images.forEach(element => {
-              this.images.push(element);
-              this.start = element.id
-              $state.loaded();
-          });
-        }
+      axios.get(api)
+      .then(response => {
+        response.data.sample_images.forEach(element => {
+            this.images.push(element);
+            this.start = element.id
+            $state.complete();
+        });
+        this.setSampleImages(this.images);
         
       },error => {
-        $state.complete();
+        $state.complete(); 
       });
     },
 

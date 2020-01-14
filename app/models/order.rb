@@ -20,7 +20,7 @@ class Order < ApplicationRecord
   # E-mail フォーマット
   validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
   # 小文字の半角英数字と3種類の記号「.」「-」「_」のみ（大文字NG）
-  validates :line_id, format: { with: /\A[a-z|.|\-|_]+\z/ }
+  validates :line_id, format: { with: /\A[a-z0-9]+\z/i } 
 
   # ハイフンなし 10桁
   validates :cell_phone_number, presence: true, numericality: { only_integer: true }, length: {minimum:11, maximum:11}

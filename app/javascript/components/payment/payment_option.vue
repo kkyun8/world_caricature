@@ -120,6 +120,64 @@ export default {
   },
   mounted: function() {
     const app_id = process.env.SQUARE_APPLICATION_ID;
+    const postSquarePayment = () => {
+            try {
+              // payment情報登録
+              const price = document.getElementById('price').value
+              const order_number = document.getElementById('order-number').value
+              const order_id = document.getElementById('order-id').value
+              const sample_image_id = document.getElementById('sample-image-id').value
+
+              // TODO: 決済したか確認、payament_flg = true なら表示しない
+              fetch('/api/square_payment', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+                body: JSON.stringify({
+                  nonce: nonce,
+                  price: price,
+                  order_number: order_number,
+                  order_id: order_id,
+                  sample_image_id: sample_image_id
+                })
+              })
+              .catch(err => {
+                alert('Network error: ' + err);
+              })
+              .then(response => {
+                if (!response.ok) {
+                  // TODO: エラーページ
+                  alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
+                }else{
+                  //オーダ状態を決済済み（２）に更新
+                  axios.put('/api/orders/' + order_number).then(response => {
+                    if(response.status == 200){
+                      if(response.data.result == 'SUCCESS') {
+                        const redirect_order_number = response.data.order.order_number
+                        const url = response.data.redirect.replace('*',redirect_order_number)
+                        // 決済完了ページに遷移
+                        window.location = url
+                      }
+                    }else{
+                    }
+                  })
+                  .catch(err => {
+                  }); 
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
+              });
+              
+            } catch (error) {
+              console.log(error)
+              alert(error)
+            }
+    }
+
     // Create and initialize a payment form object
     this.paymentForm = new SqPaymentForm({
       // Initialize the payment form elements
@@ -199,7 +257,7 @@ export default {
               const sample_image_id = document.getElementById('sample-image-id').value
 
               // TODO: 決済したか確認、payament_flg = true なら表示しない
-              fetch('/api/square_payment', {
+              await fetch('/api/square_payment', {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',

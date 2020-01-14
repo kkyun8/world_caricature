@@ -143,11 +143,11 @@
         <div class="mx-auto col-md-12 col-lg-6" style="">
           <form class="text-left">
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>名前（漢字）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_kanji" type="text" class="form-control" placeholder="山田太郎"> </div>
-              <div class="form-group col-md-6"> <label><b>名前（ふりがな）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_furigana" type="text" class="form-control" placeholder="やまだたろう"> </div>
+              <div class="form-group col-md-6"> <label><b>名前（漢字）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_kanji" type="text" class="form-control" placeholder="山田太郎" maxlength="25"> </div>
+              <div class="form-group col-md-6"> <label><b>名前（ふりがな）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_furigana" type="text" class="form-control" placeholder="やまだたろう" maxlength="25"> </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>メール</b></label><span class="text-danger" style="font-size: 11px">＊簡単ログインは以下のアイコンクリック</span><input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com">
+              <div class="form-group col-md-6"> <label><b>メール</b></label><span class="text-danger" style="font-size: 11px">＊簡単ログインは以下のアイコンクリック</span><input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com" maxlength="50">
                 <div class="form-group py-2">
                   <a class="btn btn-outline-primary" style="width:24%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
                   <a class="btn btn-outline-primary" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
@@ -155,9 +155,9 @@
                   <a class="btn btn-outline-primary" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
                 </div>
               </div>
-              <div class="form-group col-md-6"> <label><b>ラインID</b></label><span class="text-danger" style="font-size: 11px">＊ワンタッチログインはアイコンクリック</span><input v-model="order.line_id" type="text" class="form-control" placeholder="＊小文字・半角英数字と「 . , - , _ 」のみ">
+              <div class="form-group col-md-6"> <label><b>ラインID</b></label><span class="text-danger" style="font-size: 11px">＊ワンタッチログインはアイコンクリック</span><input v-bind:value="order.line_id == '' ? 'ラインロゴをクリックしてください。':'ラインIDが登録されました。'" type="text" class="form-control" placeholder="＊小文字・半角英数字と「 . , - , _ 」のみ" readonly>
                 <div class="form-group py-2">
-                  <a class="btn btn-outline-primary w-100" style="color:#00c300" href="#"><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
+                  <a class="btn btn-outline-primary w-100" style="color:#00c300" @click="getLineId()" ><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
                 </div>
               </div>
             </div>
@@ -178,17 +178,17 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>電話番号（携帯）</b><span class="text-danger">＊半角数字11桁のみ</span></label> <input v-model="order.cell_phone_number" type="number" class="form-control" placeholder="09012345678"> </div>
-              <div class="form-group col-md-6"> <label><b>電話番号（家）</b><span class="text-danger">＊半角数字10、11桁のみ</span></label> <input v-model="order.home_phone_number" type="number" class="form-control" placeholder="0481234567"> </div>
+              <div class="form-group col-md-6"> <label><b>電話番号（携帯）</b><span class="text-danger">＊半角数字11桁のみ</span></label> <input v-model="order.cell_phone_number" type="number" class="form-control" placeholder="09012345678" maxlength="11"> </div>
+              <div class="form-group col-md-6"> <label><b>電話番号（家）</b><span class="text-danger">＊半角数字10、11桁のみ</span></label> <input v-model="order.home_phone_number" type="number" class="form-control" placeholder="0481234567" maxlength="11"> </div>
             </div>
             <div class="form-group"><label><b>お届け先（郵便番号）</b><span class="text-danger">＊半角数字7桁ハイフンなし</span></label>
               <div class="input-group w-75">
-                <input v-model="order.postal_code" type="number" class="form-control" placeholder="1234567">
+                <input v-model="order.postal_code" type="number" class="form-control" placeholder="1234567"  maxlength="7">
                 <div class="input-group-append"><button class="btn btn-primary" type="button">住所取得</button></div>
               </div>
             </div>
-            <div class="form-group"><label><b>お届け先（都道府県市区町）</b></label><input id="address1" v-model="order.address1" type="text" class="form-control" placeholder="東京都豊島区"></div>
-            <div class="form-group"><label><b>お届け先（村番地など）</b></label><input v-model="order.address2" type="text" class="form-control" placeholder="東池袋1-1-1　101号"></div>
+            <div class="form-group"><label><b>お届け先（都道府県市区町）</b></label><input id="address1" v-model="order.address1" type="text" class="form-control" placeholder="東京都豊島区" maxlength="25"></div>
+            <div class="form-group"><label><b>お届け先（村番地など）</b></label><input v-model="order.address2" type="text" class="form-control" placeholder="東池袋1-1-1　101号" maxlength="25"></div>
             <div class="form-group"><label><b>コメント</b></label>
               <textarea v-model="order.comment" class="form-control"></textarea>
             </div>
@@ -233,6 +233,7 @@
 import axios from 'axios';
 import CustomerInfomation from './customer_infomation'
 import Alert from '../common/alert/alert'
+import { mapGetters } from "vuex";
 
 export default {
   props: ['id']
@@ -245,8 +246,9 @@ export default {
 
   data: function(){
     return {
-      postal_api_url: 'https://apis.postcode-jp.com/api/v3/postcodes?',
-      postal_api_key: 'apikey=LVKBONNkv4JibbwWXwpwuZUG18Jqjx0q0BfOQoN&',
+      postal_api_url: '',
+      postal_api_key: '',
+      auth_key: '',
       sample_image: '',
       order: {
         sample_image_id: '',
@@ -279,6 +281,10 @@ export default {
   },
   mounted: function() {
     this.getSampleImage();
+
+    this.postal_api_url = this.getPostalCodeApiUrl;
+    this.postal_api_key = this.getPostalCodeApiKey;
+    this.auth_key = this.getAuthKey;
   },
 
   watch: {
@@ -301,11 +307,11 @@ export default {
 
           const result = response.data.data[0]
 
-          // みぎにデータを登録するobject
           this.order.address1 = result.allAddress
-          document.get
-          document.getElementById('address1').focus().scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById('address1').focus()
+          // document.getElementById('address1').focus().scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        //取得失敗しても画面に表示しない
       },(error) => {
 
       });
@@ -313,7 +319,7 @@ export default {
   },
 
   computed:{
-
+    ...mapGetters(["getPostalCodeApiUrl", "getPostalCodeApiKey","getAuthKey"]),
     /**
      * フレーム価格セット
      */
@@ -334,7 +340,22 @@ export default {
   },
   
   methods: {
-
+    /**
+     * LINE ログイン
+     */
+    getLineId: function() {
+	    // app public keyを使用してOAuth.ioを初期化します
+	    OAuth.initialize(this.auth_key);
+	    // ポップアップを開きます。
+	    OAuth.popup('line').then(line => {
+		  // ログインに成功したら、ユーザーの名前を表示させます。
+		  // #me() は便利なメソッドです。
+		  // 取得したユーザーのデータをコンソールで確認出来ます。
+		  line.me().then(data => {
+        this.order.line_id = data.userId
+		    });
+	    });
+    },
     /** 
     * サンプルイメージデータ取得
     */
@@ -365,14 +386,14 @@ export default {
     /**
     * オーダー情報読み込み
     */
-    selectOrder: function(){
+    // selectOrder: function(){
 
-    },
+    // },
 
     /**
     * オーダー作成
     */
-    createOrder: function(){
+    createOrder: async function() {
       //TODO 認証について
       axios.defaults.headers.common = {
         'X-Requested-With': 'XMLHttpRequest',
@@ -380,28 +401,74 @@ export default {
       };
       //order_number取得
       this.order.order_number = this.createOrderNumber()
+      let responseOrder = '';
 
-      axios.post('/api/orders/', this.order).then((response) => {
-        this.error_messages = []
-        if(response.status === 200){
-          if(response.data.result == 'FAIL') {
-            response.data.messages.forEach(element => {
-              this.error_messages.push(element)
-              this.show_alert = true
+      try {
+        const insertOrder = await axios.post('/api/orders/', this.order).then((response) => {
+          this.error_messages = []
+          if(response.status === 200){
+            if(response.data.result == 'FAIL') {
+              response.data.messages.forEach(element => {
+                this.error_messages.push(element)
+                this.show_alert = true
+              });
               document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
-            });
-          }else if (response.data.result == 'SUCCESS') {
-            this.show_alert = false
-            if(confirm('オーダを登録すると注文情報を変更できません。よろしいですか？')){
-              this.$router.push('/payment/' + response.data.order.order_number)
+              return null;
+            }else if (response.data.result == 'SUCCESS') {
+              this.show_alert = false
+              return response.data.order;
             }
           }
+        });
+        const confirm = await this.confirmPromise('オーダを登録すると注文情報を変更できません。よろしいですか？');
+        const updateOrder = await this.updateOrder(insertOrder, confirm);
+        if(updateOrder){
+          //削除フラグがfalseの場合、決済ページに遷移
+          if(!updateOrder.delflg) this.$router.push('/payment/' + updateOrder.order_number)
         }
-      },(error) => {
+      }catch (error) {
+        console.log(error)
+      }
 
+    },
+
+    updateOrder(order, confirm){
+      return new Promise((resolve, reject) => {
+        if(order == null) {
+          reject("order not found")
+        }
+        const order_number = order.order_number
+        let getOrder = order
+        //キャンセルを押下した場合、falseになる
+        getOrder.delflg = !confirm
+        axios.put('/api/orders/' + order_number, order).then((response) => {
+          if(response.status !== 200){
+            // TODO: エラーテーブルに登録
+            reject('save error')
+          }else{
+            if (response.data.result == 'SUCCESS') {
+              resolve(order)
+            }else{
+              // TODO: エラーテーブルに登録
+              reject('save error')
+            }
+          }
+        })
+        .catch((error) => {
+          // TODO: エラーテーブルに登録
+          console.log(error)
+          reject(error)
+        });
       });
     },
 
+    confirmPromise(message){
+        if (window.confirm(message)) {
+          return Promise.resolve(true);
+        }else{
+          return Promise.resolve(false);
+        }
+    },
     /**
      * オーダー番号作成 現在時間＋数字8桁
      */
