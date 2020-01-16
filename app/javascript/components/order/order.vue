@@ -393,6 +393,12 @@ export default {
     /**
     * オーダー作成
     */
+   
+// TODO: オーダー作成後エラー発生
+// vue.runtime.esm.js:640 [Vue warn]: $attrs is readonly.
+//        <Alert> at app/javascript/components/common/alert/alert.vue
+//          <Order> at app/javascript/components/order/order.vue
+// vue.runtime.esm.js:640 [Vue warn]: $listeners is readonly.
     createOrder: async function() {
       //TODO 認証について
       axios.defaults.headers.common = {
@@ -422,6 +428,7 @@ export default {
         });
         const confirm = await this.confirmPromise('オーダを登録すると注文情報を変更できません。よろしいですか？');
         const updateOrder = await this.updateOrder(insertOrder, confirm);
+        const sendLineMessage = await this.sendMessage(updateOrder)
         if(updateOrder){
           //削除フラグがfalseの場合、決済ページに遷移
           if(!updateOrder.delflg) this.$router.push('/payment/' + updateOrder.order_number)
@@ -468,6 +475,20 @@ export default {
         }else{
           return Promise.resolve(false);
         }
+    },
+
+    /**
+     * オーダ作成完了後、メッセージ送信
+     */
+    sendMessage: function(updateOrder) {
+      return new Promise((resolve, reject) => {
+        if(updateOrder.delflg) reject()
+        const id = updateOrder.line_id
+        axios.post('/api/line/send/', { id })
+        .then((response) => {
+          if(response.data.result == 'SUCCESS') resolve(true);
+        });
+      })
     },
     /**
      * オーダー番号作成 現在時間＋数字8桁
