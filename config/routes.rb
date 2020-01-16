@@ -8,11 +8,13 @@ Rails.application.routes.draw do
   get '/not_found/:order_number', to: 'home#index'
   get '/contact', to: 'home#index'
 
+
   namespace :api, format: 'json' do
     resources :sample_images
     resources :orders, param: :order_number
     resources :payments
     post 'square_payment', to: 'square_payment#charge_card'
+    post 'line/send', to: 'line#send_message'
   end
   
 end
