@@ -1,0 +1,30 @@
+
+
+<h3> ワルード似顔絵　WORLD CARICATUREに注文が登録されました。</h3>
+===========================================================
+⭐️まだ注文が完了されておりません。
+⭐️①以下の決済ページで決済する。
+⭐️②決済完了メールをもらったら写真添付して返してください。
+===========================================================
+<p>決済ページURL：　</p>
+
+<p4>注文者情報<p4>
+<p>名前：　<%= @order.name_kanji %>　<%= @order.name_furigana %>
+<p>メールアドレス：　<%= @order.email %>
+<p>電話番号：　<%= @order.cell_phone_number %>　<%= @order.home_phone_number %>
+<p>お届け先：　〒<%= @order.postal_code %>
+　　　　　　　<%= @order.address1 %>　<%= @order.address2 %>
+
+<p4>商品情報<p4>
+<p>注文番号：　<%= @order.order_number %>
+<p>価格：　<%= @order.price %>
+<p>フレームサイズ：　<%= @order.flame_size %>
+<%= if @order.premium_wrapping %>
+<p>プレミアムラッピング：　あり
+<% else %>
+<p>プレミアムラッピング：　なし
+<% end %>
+<p>コメント：　<%= @order.comment %>
+
+
+===========================================================

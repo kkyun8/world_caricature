@@ -20,6 +20,11 @@ class Api::OrdersController < ApplicationController
     @order = Order.find_by(order_number: params[:order_number])
     
     if @order.update_attributes(order_params)
+      #TODO: ステータス1、削除フラグがfalse、メール送信希望なら,以下を実行
+      if @order.order_status == '1' && @order.delflg == false && @order.send_type == 'mail'
+        # 保存後にメールを送信
+        ContactMailer.order_create_mail(@order.order_number).deliver
+      end
       render json: { result: 'SUCCESS', order: @order }
     else
       render json: { result: 'FAIL', messages: @order.errors.full_messages, order: @order}
