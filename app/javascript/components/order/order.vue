@@ -480,11 +480,11 @@ export default {
     /**
      * オーダ作成完了後、メッセージ送信
      */
-    sendMessage: function(updateOrder) {
+    sendLineMessageToUser: function(updateOrder) {
       return new Promise((resolve, reject) => {
         if(updateOrder.delflg) reject()
         const id = updateOrder.line_id
-        axios.post('/api/line/send/', { id })
+        axios.post('/api/line_order_to_user', { id })
         .then((response) => {
           if(response.data.result == 'SUCCESS') resolve(true);
         });

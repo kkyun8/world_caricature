@@ -14,7 +14,8 @@ Rails.application.routes.draw do
     resources :orders, param: :order_number
     resources :payments
     post 'square_payment', to: 'square_payment#charge_card'
-    post 'line/send', to: 'line#send_message'
+    post 'line_order_to_user', to: 'line#order_create_to_user'
+    post 'line_payment_to_user ', to: 'line#payment_success_to_user'
   end
   
 end
