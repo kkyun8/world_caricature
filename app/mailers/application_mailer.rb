@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
+  #TODO: メール設定
+  default from:  "ワルード似顔絵 <from@example.com>",
   layout 'mailer'
 end
