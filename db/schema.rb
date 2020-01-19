@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_14_130235) do
+ActiveRecord::Schema.define(version: 2020_01_18_025721) do
 
   create_table "data_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "type_name", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2020_01_14_130235) do
     t.string "name_furigana", null: false
     t.string "email"
     t.string "line_id"
+    t.string "communication_type", default: "email", null: false
     t.string "cell_phone_number"
     t.string "home_phone_number"
     t.string "postal_code", null: false

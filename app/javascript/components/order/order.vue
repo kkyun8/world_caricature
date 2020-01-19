@@ -162,18 +162,22 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-12"><label><b><U>写真ファイル送信方法設定</U></b></label></div>
+              <div class="form-group col-md-12"><label><b><U>写真ファイル送信方法/問合せ対象設定</U></b></label></div>
               <div class="form-group col-md-12">
-                <span class="text-danger">＊あああああああああああああああああああああああああああ</span>
+                <span class="text-danger">＊似顔絵作業に必要な写真を送信アカウント</span>
               </div>
               <div class="form-group col-md-6">
-                <input type="radio" id="typeEmail" name="imageSendType" value="email" v-model="order.sendType"><label for="typeEmail">メールで送信</label>
+                <input type="radio" id="typeEmail" name="imageSendType" value="email" v-model="order.communication_type"><label for="typeEmail">メールで送信</label>
                 <div class="form-control" style="height:100px; border: 1px solid">
+                  オーダーの決済が確認されたら、決済完了メールを送信します。
+                  <br><u>決済完了メールに写真を添付して転送してください。</u>
                 </div>
               </div>
               <div class="form-group col-md-6">
-                <input type="radio" id="typeLine" name="imageSendType" value="line" v-model="order.sendType"><label for="typeLine">ラインで送信</label>
+                <input type="radio" id="typeLine" name="imageSendType" value="line" v-model="order.communication_type"><label for="typeLine">ラインで送信</label>
                 <div class="form-control" style="height:100px; border: 1px solid">
+                  公式アカウントに写真を転送することで終わりです。
+                  ライン上で注文確認などもできます。<br><span class="text-danger">＊おすすめ、ライン友達追加不要</span>
                 </div>
               </div>
             </div>
@@ -261,7 +265,7 @@ export default {
         name_furigana: '',
         email: '',
         line_id: '',
-        sendType: 'email',
+        communication_type: 'email',
         cell_phone_number: '',
         home_phone_number: '',
         postal_code: '',
@@ -273,6 +277,7 @@ export default {
       show_alert: false,
       peyment_flg: false,
       wrapping_price: 0,
+      communication_type_seleted: '',
     }
   },
   created: function() {
@@ -308,8 +313,8 @@ export default {
           const result = response.data.data[0]
 
           this.order.address1 = result.allAddress
-          document.getElementById('address1').focus()
-          // document.getElementById('address1').focus().scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById('address1').focus();
+          // TODO: scrollERRO document.getElementById('address1').focus().scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         //取得失敗しても画面に表示しない
       },(error) => {
@@ -401,10 +406,10 @@ export default {
 // vue.runtime.esm.js:640 [Vue warn]: $listeners is readonly.
     createOrder: async function() {
       //TODO 認証について
-      axios.defaults.headers.common = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      };
+      // axios.defaults.headers.common = {
+      //   'X-Requested-With': 'XMLHttpRequest',
+      //   'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      // };
       //order_number取得
       this.order.order_number = this.createOrderNumber()
       let responseOrder = '';
@@ -428,7 +433,7 @@ export default {
         });
         const confirm = await this.confirmPromise('オーダを登録すると注文情報を変更できません。よろしいですか？');
         const updateOrder = await this.updateOrder(insertOrder, confirm);
-        const sendLineMessage = await this.sendMessage(updateOrder)
+        const sendLineMessage = await this.sendLineMessageToUser(updateOrder)
         if(updateOrder){
           //削除フラグがfalseの場合、決済ページに遷移
           if(!updateOrder.delflg) this.$router.push('/payment/' + updateOrder.order_number)

@@ -21,9 +21,9 @@ class Api::OrdersController < ApplicationController
     
     if @order.update_attributes(order_params)
       #TODO: ステータス1、削除フラグがfalse、メール送信希望なら,以下を実行
-      if @order.order_status == '1' && @order.delflg == false && @order.send_type == 'mail'
+      if @order.order_status == '1' && @order.delflg == false && @order.communication_type == 'mail'
         # 保存後にメールを送信
-        ContactMailer.order_create_mail(@order.order_number).deliver
+        ContactMailer.order_create_mail(@order.order_number).deliver_now
       end
       render json: { result: 'SUCCESS', order: @order }
     else
@@ -34,7 +34,7 @@ class Api::OrdersController < ApplicationController
   # ForbiddenAttributesError対処
   private
     def order_params
-      params.require(:order).permit(:sample_image_id, :order_number, :order_status, :delflg, :flame_size, :premium_wrapping, :price, :name_kanji, :name_furigana, :email, :line_id, :cell_phone_number, :home_phone_number, :postal_code, :address1, :address2, :comment)  
+      params.require(:order).permit(:sample_image_id, :order_number, :order_status, :delflg, :flame_size, :premium_wrapping, :price, :name_kanji, :name_furigana, :email, :line_id, :communication_type, :cell_phone_number, :home_phone_number, :postal_code, :address1, :address2, :comment)  
     end
 
 end
