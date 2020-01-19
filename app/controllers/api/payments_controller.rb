@@ -1,7 +1,8 @@
 class Api::PaymentsController < ApplicationController
 
   def show
-    @payment = Payment.where(payment_flg: 0).find(params[:order_number])
+    #決済未実行のオーダー取得
+    @payment = Payment.where(payment_flg: 0).where(delflg: 0).find(params[:order_number])
     render json: { result: 'SUCCESS', message: 'getData', patment: @payment }
   end
 
