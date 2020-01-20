@@ -405,11 +405,6 @@ export default {
 //          <Order> at app/javascript/components/order/order.vue
 // vue.runtime.esm.js:640 [Vue warn]: $listeners is readonly.
     createOrder: async function() {
-      //TODO 認証について
-      // axios.defaults.headers.common = {
-      //   'X-Requested-With': 'XMLHttpRequest',
-      //   'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      // };
       //order_number取得
       this.order.order_number = this.createOrderNumber()
       let responseOrder = '';
