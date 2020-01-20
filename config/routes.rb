@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get '/payment/:order_number', to: 'home#index'
   get '/payment/:order_number/success/', to: 'home#index'
   get '/not_found/:order_number', to: 'home#index'
+  get '/news/', to: 'home#index'
   get '/contact', to: 'home#index'
 
 
@@ -13,6 +14,7 @@ Rails.application.routes.draw do
     resources :sample_images
     resources :orders, param: :order_number
     resources :payments
+    resources :news
     post 'square_payment', to: 'square_payment#charge_card'
     post 'line_order_to_user', to: 'line#order_create_to_user'
     post 'line_payment_to_user ', to: 'line#payment_success_to_user'

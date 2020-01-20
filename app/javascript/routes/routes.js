@@ -8,6 +8,7 @@ import Contact from '../components/contact/contact'
 import Payment from '../components/payment/payment'
 import NotFound from '../components/common/not_found'
 import PaymentSuccess from '../components/payment/payment_success'
+import News from '../components/news/news'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,7 @@ export default new VueRouter({
     { path: '/payment/:order_number', component: Payment },
     { path: '/not_found/:order_number', component: NotFound },
     { path: '/payment/:order_number/success', component: PaymentSuccess },
+    { path: '/news', component: News },
     { path: '/contact', component: Contact }
   ],
 })
