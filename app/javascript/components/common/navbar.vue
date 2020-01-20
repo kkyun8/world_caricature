@@ -12,7 +12,7 @@
           <li class="nav-item"> <a class="nav-link" href="/sample_images">サンプルイメージ</a> </li>
           <li class="nav-item"> <a class="nav-link" href="#">注文確認</a> </li>
           <li class="nav-item"> <a class="nav-link" href="/about_the_order">注文について</a> </li>
-          <li class="nav-item"> <a class="nav-link" href="#">お知らせ</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="/news">お知らせ</a> </li>
           <li class="nav-item"> <a class="nav-link" href="/contact">お問い合わせ・作家募集<br></a> </li>
         </ul>
       </div>
