@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.4'
 
+gem 'kaminari'
+gem 'kaminari-bootstrap'
+
 gem 'line-bot-api'
 
 # add foreman
