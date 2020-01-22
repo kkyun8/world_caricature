@@ -18,7 +18,6 @@ class Api::OrdersController < ApplicationController
   
   def update
     @order = Order.find_by(order_number: params[:order_number])
-    
     if @order.update_attributes(order_params)
       #TODO: ステータス1、削除フラグがfalse、メール送信希望なら,以下を実行
       if @order.order_status == '1' && @order.delflg == false && @order.communication_type == 'mail'

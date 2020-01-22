@@ -17,37 +17,76 @@
           <b-table hover :items="articles"></b-table>
         </div>
         <div class="mx-auto col-lg-12">
-          <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table"></b-pagination>
+          <!-- <b-pagination aria-controls="my-table"
+            v-model="currentPage"
+            :total-rows="dataTotalRows"
+            :per-page="dataPerPage"
+            first-text="First"
+            prev-text="Prev"
+            next-text="Next"
+            last-text="Last"></b-pagination> -->
         </div>
       </div>
+{{dataArticles}}
+
     </div>
     <!-- Gallery -->
  </div>
 </template>
 <script>
-import Articles from "./articles"
 import axios from 'axios'
 
 export default {
-  components: {
-    'articles': Articles,
+  props: {
+    currentPage: Number,
+    totalRows: Number,
+    perPage: Number,
+    articles: Array,
   },
+  // components: {
+  //   'articles': Articles,
+  // },
   data: function(){
     return {
       //TODO:
-      currentPage: 1,
-      rows: 8,
-      perPage: 3,
-      articles: [],
+      dataCurrentPage: 1,
+      dataTotalRows: 0,
+      dataPerPage: 0,
+      paginate: {
+        totalPages: 0, 
+        nextPage: 0, 
+        prevPage: 0,
+        firstPageFlg: false,
+        lastPageFlg: false,
+      },
+      dataArticles: this.articles,
     }
   },
-  created: function(){
+  watch:{
+    currentPage: function(newVal, oldVal){
+      if(newVal){
+        this.getList(newVal);
+      }
+    }
+  },
+  mounted: function(){
     //TODO:
-    axios.get('/api/news/',this.currentPage).then((response) => {
-      this.articles = response.data.news;
-      console.log(response);
-    });
-  }
+    this.getList(this.dataCurrentPage)
+  },
+  methods: {
+    getList: function(page){
+      axios.get('/api/news/',page).then((response) => {
+        const data = response.data
+        this.paginate = data.paginate
+        this.dataCurrentPage = data.currentPage
+        
+        this.dataArticles = data.news;
+        this.dataTotalRows = data.totalRows
+        this.dataPerPage = data.perPage
+        console.log(response);
+      });
+    }
+  },
 }
 
 </script>

@@ -41,3 +41,5 @@ yarn-debug.log*
 /.vscode/*
 
 /.env
+
+/db/seeds.rb
