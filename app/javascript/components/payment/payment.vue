@@ -100,12 +100,6 @@ export default {
      * オーダー情報取得
      */
     getOrderInfomation(){
-      //TODO 認証について
-      axios.defaults.headers.common = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      };
-
       const getOrderNumber = this.$route.params['order_number']
 
       axios.get('/api/orders/' + getOrderNumber ).then((response) => {

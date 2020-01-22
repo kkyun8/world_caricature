@@ -75,10 +75,7 @@
                 </button>
               </div>
             </div>
-            <input id="price" type="hidden" name="price">
-            <input id="order-number" type="hidden" name="order_number">
-            <input id="order-id" type="hidden" name="order_id">
-            <input id="sample-image-id" type="hidden" name="sample_image_id">
+            <input id="order" type="hidden" name="order">
           </div>
           <div class="card border-primary">
             <div class="card-header">
@@ -104,7 +101,6 @@
 <script>
 import Alert from '../common/alert/alert'
 import axios from 'axios'
-import { async } from 'q'
 
 export default {
   name: 'paymentForm',
@@ -119,17 +115,12 @@ export default {
     }
   },
   mounted: function() {
-    const app_id = process.env.SQUARE_APPLICATION_ID;
-    const postSquarePayment = () => {
-            try {
-              // payment情報登録
-              const price = document.getElementById('price').value
-              const order_number = document.getElementById('order-number').value
-              const order_id = document.getElementById('order-id').value
-              const sample_image_id = document.getElementById('sample-image-id').value
 
-              // TODO: 決済したか確認、payament_flg = true なら表示しない
-              fetch('/api/square_payment', {
+    const updateOrder0 = this.order
+    const app_id = process.env.SQUARE_APPLICATION_ID;
+    const postSquarePayment = (nonce, order) => {
+      return new Promise((resolve,reject) => {
+        fetch('/api/square_payment', {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
@@ -137,47 +128,40 @@ export default {
               },
                 body: JSON.stringify({
                   nonce: nonce,
-                  price: price,
-                  order_number: order_number,
-                  order_id: order_id,
-                  sample_image_id: sample_image_id
+                  price: order.price,
+                  order_number: order.order_number,
+                  order_id: order.order_id,
+                  sample_image_id: order.sample_image_id
                 })
               })
               .catch(err => {
                 alert('Network error: ' + err);
+                reject(err)
               })
               .then(response => {
-                if (!response.ok) {
-                  // TODO: エラーページ
-                  alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
-                }else{
-                  //オーダ状態を決済済み（２）に更新
-                  axios.put('/api/orders/' + order_number).then(response => {
-                    if(response.status == 200){
-                      if(response.data.result == 'SUCCESS') {
-                        const redirect_order_number = response.data.order.order_number
-                        const url = response.data.redirect.replace('*',redirect_order_number)
-                        // 決済完了ページに遷移
-                        window.location = url
-                      }
-                    }else{
-                    }
-                  })
-                  .catch(err => {
-                  }); 
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
+                order.order_status = 2;
+                resolve(order);
               });
-              
-            } catch (error) {
-              console.log(error)
-              alert(error)
-            }
+      })
     }
+    const updateOrderStatus = (order) => {
+      return new Promise((resolve,reject) => {
+        const order_number = order.order_number
+        axios.put('/api/orders/' + order_number, order).then((response) => {
+          if(response.status == 200){
+            if(response.data.result == 'SUCCESS') {
+              // 決済完了ページに遷移 TODO:
+              //TODO: loding-page
+              //const redirect_order_number = response.data.order.order_number
+              //const url = response.data.redirect.replace('*',redirect_order_number)
+              window.location = 'http://localhost:5000/'
+            }
+          }
+        });
+      })
+    };
 
+    const updateOrder1 = this.order
     // Create and initialize a payment form object
     this.paymentForm = new SqPaymentForm({
       // Initialize the payment form elements
@@ -185,7 +169,6 @@ export default {
       applicationId: app_id,
       inputClass: 'sq-input',
       autoBuild: false,
-
       // Customize the CSS for SqPaymentForm iframe elements
       inputStyles: [{
           fontSize: '16px',
@@ -218,7 +201,6 @@ export default {
         * Triggered when: SqPaymentForm completes a card nonce request
         */
         cardNonceResponseReceived: async function (errors, nonce, cardData) {
-
           if (errors) {
             let error_messages = ''
 
@@ -245,65 +227,17 @@ export default {
               error_messages = error_messages +　'\n'　+ name + message
             });
 
-            alert(order_number)
             alert(error_messages)
 
           }else{
-            try {
-              // payment情報登録
-              const price = document.getElementById('price').value
-              const order_number = document.getElementById('order-number').value
-              const order_id = document.getElementById('order-id').value
-              const sample_image_id = document.getElementById('sample-image-id').value
-
-              // TODO: 決済したか確認、payament_flg = true なら表示しない
-              await fetch('/api/square_payment', {
-                method: 'POST',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-                body: JSON.stringify({
-                  nonce: nonce,
-                  price: price,
-                  order_number: order_number,
-                  order_id: order_id,
-                  sample_image_id: sample_image_id
-                })
-              })
-              .catch(err => {
-                alert('Network error: ' + err);
-              })
-              .then(response => {
-                if (!response.ok) {
-                  // TODO: エラーページ
-                  alert(response.text().then(errorInfo => Promise.reject(errorInfo)));
-                }else{
-                  //オーダ状態を決済済み（２）に更新
-                  axios.put('/api/orders/' + order_number).then(response => {
-                    if(response.status == 200){
-                      if(response.data.result == 'SUCCESS') {
-                        const redirect_order_number = response.data.order.order_number
-                        const url = response.data.redirect.replace('*',redirect_order_number)
-                        // 決済完了ページに遷移
-                        window.location = url
-                      }
-                    }else{
-                    }
-                  })
-                  .catch(err => {
-                  }); 
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert('通信中エラーが発生しました。グラウザを再読み込みしてから再実行ください。');
-              });
-              
-            } catch (error) {
-              console.log(error)
-              alert(error)
-            }
+              try{
+                const jsonOrder = document.getElementById('order').value;
+                const order = JSON.parse(jsonOrder);
+                const square = await postSquarePayment(nonce, order)
+                const orderStatus = await updateOrderStatus(square)
+              }catch(e){
+                console.log(e)
+              }
           }
         },
       }
@@ -313,10 +247,7 @@ export default {
     },
   methods: {
     onGetCardNonce: function(event) {
-      document.getElementById('price').value = this.order.price;
-      document.getElementById('order-number').value = this.order.order_number;
-      document.getElementById('order-id').value = this.order.id;
-      document.getElementById('sample-image-id').value = this.order.sample_image_id;
+      document.getElementById('order').value = JSON.stringify(this.order)
       event.preventDefault();
       this.paymentForm.requestCardNonce();
     },
