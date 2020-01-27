@@ -57,7 +57,7 @@ class Api::LineController < ApplicationController
     #オーダ作成後、ラインに通知
     message = {
       type: 'text',
-      text: '決済を完了しました！ご注文ありがとうございます！ラインで写真を送信してください！'
+      text: '注文があります。注文番号「' + order_number + '」'
     }
 
     client = Line::Bot::Client.new { |config|
