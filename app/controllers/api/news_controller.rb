@@ -1,22 +1,21 @@
 class Api::NewsController < ApplicationController
-  PER = 8
 
   def index
-    @news = News.page(params[:page]).per(PER).where(delflg: 0)
-    #User.page(params[:page]).limit_value       #=> 20
-    paginate = {
-      totalPages: News.page(params[:page]).per(PER).where(delflg: 0).total_pages,
-      nextPage: News.page(params[:page]).per(PER).where(delflg: 0).next_page,
-      prevPage: News.page(params[:page]).per(PER).where(delflg: 0).prev_page,
-      firstPageFlg: News.page(params[:page]).per(PER).where(delflg: 0).first_page?,
-      lastPageFlg: News.page(params[:page]).per(PER).where(delflg: 0).last_page?
-    }
+    @news = News.page(params[:page]).where(delflg: 0)
+    
+    render json: { result: 'SUCCESS', message: 'Loaded', news: @news}
 
-    render json: { result: 'SUCCESS', message: 'Loaded', news: @news, 
-      perPage: PER,
-      totalRows: News.page(params[:page]).where(delflg: 0).count,
-      currentPage: News.page(params[:page]).per(PER).where(delflg: 0).current_page,
-      paginate: paginate }
+    # paginate = {
+    #   totalPages: News.page(params[:page]).per(PER).where(delflg: 0).total_pages,
+    #   nextPage: News.page(params[:page]).per(PER).where(delflg: 0).next_page,
+    #   prevPage: News.page(params[:page]).per(PER).where(delflg: 0).prev_page,
+    #   firstPageFlg: News.page(params[:page]).per(PER).where(delflg: 0).first_page?,
+    #   lastPageFlg: News.page(params[:page]).per(PER).where(delflg: 0).last_page?
+    # }
+    #   perPage: PER,
+    #   totalRows: News.page(params[:page]).where(delflg: 0).count,
+    #   currentPage: News.page(params[:page]).per(PER).where(delflg: 0).current_page,
+    #   paginate: paginate }
   end
 
   def show

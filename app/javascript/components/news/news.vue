@@ -13,81 +13,104 @@
         </div>
       </div>
       <div class="container">
-        <div class="mx-auto col-lg-12">
-          <b-table hover :items="articles"></b-table>
+        <div class="col-md-12">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">UpdateDate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="news in displayedPosts" v-bind:key="news.id">
+                <td>{{news.id}}</td>
+                <td>{{news.title}}</td>
+                <td>{{news.updated_at}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="mx-auto col-lg-12">
-          <!-- <b-pagination aria-controls="my-table"
-            v-model="currentPage"
-            :total-rows="dataTotalRows"
-            :per-page="dataPerPage"
-            first-text="First"
-            prev-text="Prev"
-            next-text="Next"
-            last-text="Last"></b-pagination> -->
+          <ul class="pagination">
+            <li class="page-item">
+              <button type="button" class="page-link" v-bind:disabled="page == 1" @click="page--"> Previous </button>
+            </li>
+            <li class="page-item" v-for="pageNumber in pages" v-bind:key="pageNumber.index">
+              <a class="page-link"  @click="page = pageNumber"> {{pageNumber}} </a>
+            </li>
+            <li class="page-item">
+              <button type="button" class="page-link" @click="page++" v-if="page < pages.length" > Next </button>
+            </li>
+          </ul>
         </div>
       </div>
-{{dataArticles}}
-
     </div>
-    <!-- Gallery -->
  </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
-  props: {
-    currentPage: Number,
-    totalRows: Number,
-    perPage: Number,
-    articles: Array,
-  },
-  // components: {
-  //   'articles': Articles,
-  // },
   data: function(){
     return {
-      //TODO:
-      dataCurrentPage: 1,
-      dataTotalRows: 0,
-      dataPerPage: 0,
-      paginate: {
-        totalPages: 0, 
-        nextPage: 0, 
-        prevPage: 0,
-        firstPageFlg: false,
-        lastPageFlg: false,
-      },
-      dataArticles: this.articles,
+      currentPage: 1,
+      totalRows: 10,
+      perPage: 10,
+      newsItems:[],
+      page: 1,
+      posts: [],
+      pages: [],
     }
   },
-  watch:{
-    currentPage: function(newVal, oldVal){
-      if(newVal){
-        this.getList(newVal);
-      }
-    }
-  },
-  mounted: function(){
-    //TODO:
-    this.getList(this.dataCurrentPage)
-  },
-  methods: {
-    getList: function(page){
-      axios.get('/api/news/',page).then((response) => {
-        const data = response.data
-        this.paginate = data.paginate
-        this.dataCurrentPage = data.currentPage
-        
-        this.dataArticles = data.news;
-        this.dataTotalRows = data.totalRows
-        this.dataPerPage = data.perPage
-        console.log(response);
+  methods:{
+    getPosts () {
+      axios.get('/api/news/').then((response) => {
+        response.data.news.forEach(element => {
+          const updateDate = new Date(element.updated_at)
+          const y = updateDate.getFullYear();
+          const m = ("00" + (updateDate.getMonth()+1)).slice(-2);
+          const d = ("00" + updateDate.getDate()).slice(-2);
+          const updated_at = y + "/" + m + "/" + d;
+          const news = {id: element.id, title: element.title, updated_at: updated_at }
+          this.posts.push(news);
+        });
       });
+    },
+    setPages () {
+      let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.pages.push(index);
+      }
+    },
+    paginate (posts) {
+      let page = this.page;
+      let perPage = this.perPage;
+      let from = (page * perPage) - perPage;
+      let to = (page * perPage);
+      return  posts.slice(from, to);
     }
   },
+  computed: {
+    displayedPosts () {
+      return this.paginate(this.posts);
+    }
+  },
+  watch: {
+    posts () {
+      this.setPages();
+    }
+  },
+  created(){
+    this.getPosts();
+  },
+  filters: {
+    trimWords(value){
+      return value.split(" ").splice(0,20).join(" ") + '...';
+    }
+  }
 }
+
 
 </script>
 <style lang="scss">
