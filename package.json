@@ -1,6 +1,9 @@
 {
   "name": "world_caricature",
   "private": true,
+  "scripts": {
+    "lint": "yarn run eslint --ext .vue --ext .js app/javascript"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
@@ -29,6 +32,10 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^6.2.1",
     "webpack-dev-server": "^3.9.0"
   }
 }
