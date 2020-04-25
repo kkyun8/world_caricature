@@ -30,7 +30,6 @@ class Api::SquarePaymentController < ApplicationController
       @square_payment = resp.data.payment
 
       if @square_payment[:status] == "COMPLETED"
-
         @payment = Payment.new(order_number: params[:order_number], order_id: params[:order_id], sample_image_id: params[:sample_image_id], price: params[:price],
           currency: @square_payment[:amount_money][:currency], source_type: @square_payment[:source_type], card_brand: @square_payment[:card_details][:card][:card_brand], last_4: @square_payment[:card_details][:card][:last_4],
           square_created_at: @square_payment[:created_at], square_id: @square_payment[:id], square_order_id: @square_payment[:order_id],
