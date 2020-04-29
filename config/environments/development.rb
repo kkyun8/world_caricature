@@ -35,10 +35,10 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :stmp
   config.action_mailer.smtp_settings = {
 
-    port:                 ENV['EMAIL_PORT'],
-    address:              ENV['EMAIL_ADDRESS'],
-    domain:               ENV['EMAIL_DOMAIN'],
-    user_name:            ENV['EMAIL_ID'],
+    port:                 465,
+    address:              "smtp.naver.com",
+    domain:               'naver.com',
+    user_name:            'kim23302',
     password:             ENV['EMAIL_PASSWORD'],
     authentication:       'login',
     enable_starttls_auto: true
@@ -69,4 +69,6 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  require 'composite_primary_keys'
 end
