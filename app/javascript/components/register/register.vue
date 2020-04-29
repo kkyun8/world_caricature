@@ -32,7 +32,7 @@
             <label>PASSWORD CONFRIM</label>
           </b-col>
           <b-col sm="9">
-            <b-form-input v-model="confirm" type="text"></b-form-input>
+            <b-form-input v-model="password_confirmation" type="text"></b-form-input>
           </b-col>
         </b-row>
         <b-row>
@@ -62,11 +62,12 @@ export default {
   },
   methods: {
     async register() {
+      //TODO: type = 0 artist 1 user
       if (
         this.name.length === 0 ||
         this.email.length === 0 ||
         this.password.length === 0 ||
-        this.confirm.length === 0
+        this.password_confirmation.length === 0
       ) {
         return alert("入力必須");
       }
@@ -75,7 +76,7 @@ export default {
         name: this.name,
         email: this.email,
         password: this.password,
-        confirm: this.confirm
+        password_confirmation: this.password_confirmation
       });
 
       if (this.apiStatus) {
