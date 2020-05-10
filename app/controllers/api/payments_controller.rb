@@ -11,7 +11,7 @@ class Api::PaymentsController < ApplicationController
 
     if @payment.save
       #完了メール発送 TODO:
-      ContactMailer.payment_success_mail_for_user(@payment.order_number).deliver
+      #ContactMailer.payment_success_mail_for_user(@payment.order_number).deliver
       render json: { result: 'SUCCESS', payment: @payment }
     else
       render json: { result: 'FAIL', messages: @payment.errors.full_messages, payment: @payment}

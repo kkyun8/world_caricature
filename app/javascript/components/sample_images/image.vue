@@ -24,7 +24,6 @@
 <script>
 // なぜかbootstrapのmodalclassができない、なのでb-modalでmodalを作成することにした
 import ImageModal from '../common/modal/image_modal';
-import { mapMutations, mapGetters } from 'vuex';
 
 export default {
 	props: ['images'],

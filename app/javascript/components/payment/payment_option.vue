@@ -135,7 +135,6 @@ export default {
 		};
 	},
 	mounted: function() {
-		const updateOrder0 = this.order;
 		const app_id = process.env.SQUARE_APPLICATION_ID;
 		const postSquarePayment = (nonce, order) => {
 			return new Promise((resolve, reject) => {
