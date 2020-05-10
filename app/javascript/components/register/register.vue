@@ -2,45 +2,45 @@
   <!-- TODO: 修正予定-->
   <div id="register-body">
     <div class="py-5">
-      <b-container fluid>
-        <b-row>
-          <b-col sm="3">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-3">
             <label>NAME</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input v-model="name" type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col sm="3">
+          </div>
+          <div class="col-sm-9">
+            <input v-model="name" id="name" type="text" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
             <label>EMAIL</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input v-model="email" type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col sm="3">
+          </div>
+          <div class="col-sm-9">
+            <input v-model="email" id="email" type="email" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
             <label>PASSWORD</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input v-model="password" type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col sm="3">
+          </div>
+          <div class="col-sm-9">
+            <input v-model="password" id="password" type="password" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
             <label>PASSWORD CONFRIM</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input v-model="password_confirmation" type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-button @click.prevent="register()">ログイン</b-button>
-          </b-col>
-        </b-row>
-      </b-container>
+          </div>
+          <div class="col-sm-9">
+            <input v-model="password_confirmation" id="password_confirmation" type="password" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <button type="button" @click.prevent="register()">登録</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,14 +51,16 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      name: "",
       email: "",
-      password: ""
+      password: "",
+      password_confirmation: ""
     };
   },
   computed: {
-    ...mapState({
-      apiStatus: state => state.auth.apiStatus
-    })
+    // ...mapState({
+    //   apiStatus: state => state.auth.apiStatus
+    // })
   },
   methods: {
     async register() {
@@ -71,17 +73,17 @@ export default {
       ) {
         return alert("入力必須");
       }
-
-      await this.$store.dispatch("auth/register", {
+      const user = {
         name: this.name,
         email: this.email,
         password: this.password,
         password_confirmation: this.password_confirmation
-      });
+        }
+      await this.$store.dispatch("auth/register", user)
 
-      if (this.apiStatus) {
-        this.$router.push("/");
-      }
+      // if (this.apiStatus) {
+      //   this.$router.push("/");
+      // }
     }
   }
 };
