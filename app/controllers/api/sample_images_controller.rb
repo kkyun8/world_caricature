@@ -12,4 +12,14 @@ class Api::SampleImagesController < ApplicationController
     render json: { result: 'SUCCESS', message: 'getData', sample_image: @sample_image }
   end
   
+  def create
+    #TODO:
+    #権限確認
+    @sample_image = SampleImage.new()
+  end
+
+  private
+  def sample_image_params 
+    #TODO: params.require(:user).permit(:name, :email, :password_digest)
+  end
 end
