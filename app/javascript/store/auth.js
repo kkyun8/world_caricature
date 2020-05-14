@@ -46,7 +46,11 @@ const actions = {
     }
   },
   async login(context, params) {
-    const response = await axios.post("/api/users", params);
+    //TODO:
+    const response = await axios.get(
+      "/api/login?email=" + params.email + "&passowrd=" + params.password
+    );
+    console.log(response);
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);

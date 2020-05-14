@@ -4,6 +4,12 @@
     <div class="py-5">
       <div class="container-fluid">
         <div class="row">
+            <a class="btn btn-outline-primary" style="color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
+            <a class="btn btn-outline-primary" style="color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
+            <a class="btn btn-outline-primary" style="color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
+            <a class="btn btn-outline-primary" style="color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
+        </div>
+        <div class="row">
           <div class="col-sm-3">
             <label>NAME</label>
           </div>
@@ -46,7 +52,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -58,9 +64,9 @@ export default {
     };
   },
   computed: {
-    // ...mapState({
-    //   apiStatus: state => state.auth.apiStatus
-    // })
+    ...mapState({
+      apiStatus: state => state.auth.authKey
+    })
   },
   methods: {
     async register() {
