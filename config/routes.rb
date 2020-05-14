@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :news
     resources :users
-    resources :session
+    get 'login', to: 'sessions#create'
     post 'square_payment', to: 'square_payment#charge_card'
     post 'line_order_to_user', to: 'line#order_create_to_user'
     post 'line_payment_to_user ', to: 'line#payment_success_to_user'
