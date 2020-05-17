@@ -48,13 +48,12 @@ const actions = {
   async login(context, params) {
     //TODO:
     const response = await axios.get(
-      "/api/login?email=" + params.email + "&passowrd=" + params.password
+      "/api/login?email=" + params.email + "&password=" + params.password
     );
-    console.log(response);
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("setUser", response.data);
+      context.commit("setUser", response.data.user);
     }
 
     context.commit("setApiStatus", false);

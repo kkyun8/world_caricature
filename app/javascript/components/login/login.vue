@@ -58,7 +58,7 @@ export default {
         return alert("入力必須");
       }
       const params = { email:this.email, password:this.password }
-      await this.$store.dispatch('auth/login',params )
+      await this.$store.dispatch('auth/login',params)
 
       if(this.apiStatus){
         this.$router.push('/')

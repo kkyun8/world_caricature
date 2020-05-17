@@ -3,11 +3,9 @@
 class Api::SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:email])
-
-    if user&.authenticate(params[:password])
+    if user&.authenticate(session_params[:password])
       render json: { result: 'SUCCESS', user: user }
     else
-      # TODO: message set
       render json: { result: 'FAIL', messages: 'not match' }
     end
   end
@@ -20,6 +18,6 @@ class Api::SessionsController < ApplicationController
   private
 
   def session_params
-    # TODO: params.require(:session).permit(:email, :password)
+    params.permit(:email, :password)
   end
 end
