@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
-  # include SessionsHelper
+  # TODO:
+  # ログイン必須？
+  # before_action :login_required
 end

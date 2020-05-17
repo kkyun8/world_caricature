@@ -9,7 +9,7 @@ const state = {
 };
 
 const getters = {
-  check: (state) => !!state.user,
+  loginCheck: (state) => !!state.user,
 };
 
 const mutations = {
@@ -28,34 +28,32 @@ const mutations = {
 };
 
 const actions = {
+  /**
+   * 会員登録
+   * @param {*} context
+   * @param {*} params
+   */
   async register(context, params) {
-    const response = await axios.post("/api/register", params);
-
-    context.commit("setUser", response.data);
-
-    if (response.status === CREATED) {
-      context.commit("setApiStatus", true);
-      context.commit("setUser", response.data);
-      return false;
-    }
-
-    context.commit("setApiStatus", false);
-    if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setErrorMessages", response.data.errors);
-    } else {
-      // 通信に失敗した場合に error モジュールの setCode ミューテーションを commit していますが、
-      // あるストアモジュールから別のモジュールのミューテーションを commit する場合は
-      // 第三引数に { root: true } を追加します。
-      // TODO:
-      context.commit("error/setCode", response.status, { root: true });
-    }
-  },
-  async login(context, params) {
-    const response = await axios.post("/api/login", params);
+    const response = await axios.post("/api/users", params);
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("setUser", response.data);
+      context.commit("setUser", response.data.user);
+      return false;
+    } else {
+      context.commit("setApiStatus", false);
+      context.commit("setErrorMessages", response.data.messages);
+    }
+  },
+  async login(context, params) {
+    //TODO:
+    const response = await axios.get(
+      "/api/login?email=" + params.email + "&password=" + params.password
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setUser", response.data.user);
     }
 
     context.commit("setApiStatus", false);
