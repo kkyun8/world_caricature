@@ -237,7 +237,7 @@
 import axios from 'axios';
 import CustomerInfomation from './customer_infomation'
 import Alert from '../common/alert/alert'
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   props: ['id']
@@ -250,9 +250,6 @@ export default {
 
   data: function(){
     return {
-      postal_api_url: '',
-      postal_api_key: '',
-      auth_key: '',
       sample_image: '',
       order: {
         sample_image_id: '',
@@ -286,10 +283,6 @@ export default {
   },
   mounted: function() {
     this.getSampleImage();
-
-    this.postal_api_url = this.getPostalCodeApiUrl;
-    this.postal_api_key = this.getPostalCodeApiKey;
-    this.auth_key = this.getAuthKey;
   },
 
   watch: {
@@ -306,7 +299,7 @@ export default {
       if (this.order.postal_code.indexOf('-') >= 0) return 
       if (!res) return
 
-      axios.get(this.postal_api_url + this.postal_api_key + 'postcode=' + this.order.postal_code ).then((response) => {
+      axios.get(this.postalCodeApiUrl + this.postalCodeApiKey + 'postcode=' + this.order.postal_code ).then((response) => {
         if ( response.status === 200 ) {
           if (response.data.size == 0) return
 
@@ -324,7 +317,11 @@ export default {
   },
 
   computed:{
-    ...mapGetters(["getPostalCodeApiUrl", "getPostalCodeApiKey","getAuthKey"]),
+    ...mapState({
+        postalCodeApiUrl: state => state.env.postalCodeApiUrl,
+        postalCodeApiKey: state => state.env.postalCodeApiKey,
+        oauthKey: state => state.env.oauthKey
+    }),
     /**
      * フレーム価格セット
      */
@@ -350,7 +347,7 @@ export default {
      */
     getLineId: function() {
 	    // app public keyを使用してOAuth.ioを初期化します
-	    OAuth.initialize(this.auth_key);
+	    OAuth.initialize(this.oauthKey);
 	    // ポップアップを開きます。
 	    OAuth.popup('line').then(line => {
 		  // ログインに成功したら、ユーザーの名前を表示させます。

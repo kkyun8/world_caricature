@@ -63,11 +63,6 @@ export default {
       password_confirmation: ""
     };
   },
-  computed: {
-    ...mapState({
-      apiStatus: state => state.auth.authKey
-    })
-  },
   methods: {
     async register() {
       //TODO: type = 0 artist 1 user
