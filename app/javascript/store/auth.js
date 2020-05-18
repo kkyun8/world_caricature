@@ -10,6 +10,9 @@ const state = {
 
 const getters = {
   loginCheck: (state) => !!state.user,
+  userName: (state) => {
+    return state.user ? state.user.name : "";
+  },
 };
 
 const mutations = {
@@ -55,14 +58,13 @@ const actions = {
       context.commit("setApiStatus", true);
       context.commit("setUser", response.data.user);
     }
+    // context.commit("setApiStatus", false);
 
-    context.commit("setApiStatus", false);
-
-    if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("", response.data.errors);
-    } else {
-      context.commit("error/setCode", response.status, { root: true });
-    }
+    // if (response.status === UNPROCESSABLE_ENTITY) {
+    //   context.commit("", response.data.errors);
+    // } else {
+    //   context.commit("error/setCode", response.status, { root: true });
+    // }
   },
   async logout(context) {
     const response = await axios.post("/api/logout");
