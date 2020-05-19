@@ -11,9 +11,6 @@
                   <a class="btn btn-outline-primary" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
           </div>
         <div class="row">
-          username:{{userName}}
-          user: {{user}}
-          usertest: {{usertest}}
           <div class="col-3">
             <label>EMAIL</label>
           </div>
@@ -41,29 +38,12 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-
 export default {
   data() {
     return {
       email: "",
       password: ""
     };
-  },
-  computed: {
-    ...mapState({
-         usertest (state) {
-      return state.auth.user
-    },
-      user: state => state.auth.user,
-      postalCodeApiUrl: state => state.env.postalCodeApiUrl
-    }),
-  userName () {
-    return this.$store.getters['auth/userName']
-  }
-    // ...mapGetters({
-    //   userName: 'userName'
-    // })
   },
   methods: {
     async login() {
@@ -72,11 +52,7 @@ export default {
       }
       const params = { email:this.email, password:this.password }
       await this.$store.dispatch('auth/login',params)
-
       await console.log(this.$store.state.auth.user)
-      // if(this.apiStatus){
-      //   this.$router.push('/')
-      // }
     }
   }
 };

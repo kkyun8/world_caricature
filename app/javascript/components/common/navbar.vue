@@ -36,8 +36,11 @@
               </a>
             </li>
           </ul>
-          <a class="btn btn-outline-primary" href="/register">作家登録</a>
-          <a class="btn btn-outline-primary" href="/login">ログイン</a>
+          <template v-if="userName">{{userName}}</template>
+          <template v-else>
+            <a class="btn btn-outline-primary" href="/register">作家登録</a>
+            <a class="btn btn-outline-primary" href="/login">ログイン</a>
+          </template>
         </div>
       </div>
     </nav>
@@ -46,8 +49,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-export default {};
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters({
+      userName: "auth/userName"
+    })
+  }
+};
 </script>
 
 <style lang="scss"></style>
