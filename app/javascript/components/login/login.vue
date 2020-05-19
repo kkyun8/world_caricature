@@ -15,7 +15,7 @@
             <label>EMAIL</label>
           </div>
           <div class="col-9">
-            <input v-model="email" type="text">
+            <input id="email" v-model="email" type="text">
           </div>
         </div>
         <div class="row">
@@ -23,7 +23,7 @@
             <label>PASSWORD</label>
           </div>
           <div class="col-9">
-            <input v-model="password" type="password">
+            <input id="password" v-model="password" type="password">
           </div>
         </div>
         <div class="row">
@@ -38,19 +38,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   data() {
     return {
       email: "",
       password: ""
     };
-  },
-  computed: {
-    ...mapState({
-      apiStatus: state => state.auth.apiStatus
-    })
   },
   methods: {
     async login() {
@@ -59,10 +52,7 @@ export default {
       }
       const params = { email:this.email, password:this.password }
       await this.$store.dispatch('auth/login',params)
-
-      if(this.apiStatus){
-        this.$router.push('/')
-      }
+      await console.log(this.$store.state.auth.user)
     }
   }
 };
