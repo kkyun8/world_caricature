@@ -2,10 +2,10 @@ import axios from "axios";
 import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../packs/util";
 
 const state = {
-  user: null,
-  apiStatus: null,
-  errorMessages: null,
-  alertMessages: null,
+  user: {},
+  apiStatus: "",
+  errorMessages: [],
+  alertMessages: [],
 };
 
 const getters = {
@@ -57,6 +57,8 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("setUser", response.data.user);
+    } else {
+      context.commit("setErrorMessages", response.data.messages);
     }
     // context.commit("setApiStatus", false);
 
