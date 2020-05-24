@@ -4,10 +4,14 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.4'
 
 gem 'devise'
+
+gem 'omniauth'
+gem 'omniauth-line'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection'
+
+# gem 'omniauth-rails_csrf_protection'
 
 gem 'composite_primary_keys'
 gem 'kaminari'
