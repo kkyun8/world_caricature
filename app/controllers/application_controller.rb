@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
+  # before_action :authenticate_user! 
   # TODO:
   # ログイン必須？
   # before_action :login_required

@@ -8,7 +8,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '5fdf3a9bb1268349884981e18d5cc0e3938f24054b7f53ffaac86e219a9c09fa238a0e78dcbd088644e14cf9e3c107d742394ae18a2a6e9065475b99fa8c1059'
+  # config.secret_key = '56fe7282948486b6ab08ba984ab251949d519258dfbc94fbfb2dfc9cd574fba86835357f0c5839ed8e25aa763070d85f1b741f5d75849698f5bb786ce20bb13f'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -31,7 +31,16 @@ Devise.setup do |config|
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
   require 'devise/orm/active_record'
-
+  config.omniauth :google_oauth2,
+                  ENV['GOOGLE_APP_ID'],
+                  ENV['GOOGLE_APP_SECRET'],
+                  name: :google,
+                  scope: %w(email) 
+  config.omniauth :facebook,
+                  ENV['FACEBOOK_APP_ID'],
+                  ENV['FACEBOOK_APP_SECRET'],
+                  name: :facebook,
+                  scope: %w(email) 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
@@ -114,7 +123,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 11
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '5b968c79a3d5f4c62faf07175beebd24150780efe0ad5bcc4294120133246c97a06dea09e2abde13a55917da9d08deaa6a659ee78f9b993831c61dd24784f4cf'
+  # config.pepper = '60d74b05e3478aa8f97d6985ef4e68456922953e6b79779f1390a69fe0b06f4230740f3f23fb40640396100e0e3eb2a78040dfa3cbb02ba3cd5fc8264081b3e3'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -296,7 +305,4 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
-
-  # TODO: config.omniauth :facebook,ENV['FACEBOOK_CLIENT_ID'],ENV['FACEBOOK_CLIENT_SECRET']
-  config.omniauth :google_oauth2,ENV['GOOGLE_CLIENT_ID'],ENV['GOOGLE_CLIENT_SECRET']
 end
