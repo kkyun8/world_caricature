@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_155657) do
+ActiveRecord::Schema.define(version: 2020_05_23_143216) do
 
   create_table "data_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "type_name", null: false
@@ -89,12 +89,16 @@ ActiveRecord::Schema.define(version: 2020_05_07_155657) do
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "email", null: false
-    t.string "password_digest", null: false
+    t.string "name"
+    t.string "email", default: "", null: false
+    t.string "password_digest", default: "", null: false
     t.integer "artist_id"
-    t.boolean "admin", default: false, null: false
-    t.boolean "delflg"
+    t.boolean "adminflg", default: false
+    t.boolean "delflg", default: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
