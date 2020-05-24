@@ -7,6 +7,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     callback :google
   end 
 
+  def twitter
+    callback :google
+  end 
+
+  def line
+    callback :google
+  end 
+
   def callback(provider)
     @user = User.find_for_google(request.env['omniauth.auth'])
 
@@ -20,6 +28,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    redirect_to root_path and return
+    redirect_to root_path && return
   end
 end
