@@ -10,7 +10,7 @@ gem 'omniauth-line'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
-
+gem 'omniauth-instagram'
 # gem 'omniauth-rails_csrf_protection'
 
 gem 'composite_primary_keys'
