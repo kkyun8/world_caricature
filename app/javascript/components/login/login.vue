@@ -6,7 +6,7 @@
         <div class="form-group">
           <div class="form-group">
                   <a class="btn btn-outline-primary" style="width:24%; color:#3b5999" href="/users/auth/facebook"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
-                  <a class="btn btn-outline-primary" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:24%; color:#55acee" href="/users/auth/twitter"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
                   <a class="btn btn-outline-primary" style="width:24%; color:#dd4b39" href="/users/auth/google"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
                   <a class="btn btn-outline-primary" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
           </div>

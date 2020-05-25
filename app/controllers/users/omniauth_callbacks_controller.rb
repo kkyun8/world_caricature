@@ -8,12 +8,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end 
 
   def twitter
-    callback :google
+    callback :twitter
   end 
 
   def line
-    callback :google
+    callback :line
   end 
+
+  def instagram
+    callback :instagram
+  end
 
   def callback(provider)
     @user = User.find_for_google(request.env['omniauth.auth'])

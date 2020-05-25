@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # post   '/login',   to: 'sessions#create'
   # delete '/logout',  to: 'sessions#destroy'
 
-  #/users/auth/google
+  #/users/auth/divise
   devise_for :users, controllers: {
       omniauth_callbacks: "users/omniauth_callbacks"
   }
