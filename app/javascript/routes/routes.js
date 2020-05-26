@@ -2,6 +2,7 @@ import Vue from "vue/dist/vue.esm.js";
 import VueRouter from "vue-router";
 import Index from "../components/index";
 import SampleImages from "../components/sample_images/sample_images";
+import SampleImageCreate from "../components/sample_images/create"
 import AboutTheOrder from "../components/about_the_order/about_the_order";
 import Order from "../components/order/order";
 import Contact from "../components/contact/contact";
@@ -19,6 +20,7 @@ export default new VueRouter({
   routes: [
     { path: "/", component: Index },
     { path: "/sample_images", component: SampleImages },
+    { path: "/sample_images/new", component: SampleImageCreate },
     { path: "/about_the_order", component: AboutTheOrder },
     { path: "/sample_images/:id/order", component: Order, props: true },
     { path: "/payment/:order_number", component: Payment },
