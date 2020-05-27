@@ -56,7 +56,12 @@
               <label for="image_url">イメージアップロード</label>
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="image_url" />
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="image_url"
+                    @change="onFile"
+                  />
                   <label
                     class="custom-file-label"
                     for="inputFile"
@@ -67,7 +72,26 @@
               </div>
             </div>
           </div>
-          <button type="button" @click.prevent="" class="btn btn-primary">
+          <div v-if="uploadedImage" class="form-row">
+            <div class="form-group">
+              <img
+                class="rounded float-left"
+                v-show="uploadedImage"
+                :src="uploadedImage"
+                alt=""
+              />
+              <div class="card-body">
+                <button class="btn btn-warning" @click.prevent="remove()">
+                  ファイル削除
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click.prevent="create()"
+            class="btn btn-primary"
+          >
             サンプル登録
           </button>
         </form>
@@ -90,15 +114,39 @@ export default {
       numberOfPeople: 0,
       numberOfPeopleRange: [],
       imageUrl: "",
+      uploadedImage: "",
     };
   },
   methods: {
     // TODO: price order type numberofpeople master 作成
     // aws s3 連携
-    async postTest() {
-      await axios.post("/api/url/").then((response) => {
-        console.log(response);
-      });
+    async create() {
+      const response = await axios
+        .post("/api/sample_images", { uploaded_image: this.uploadedImage })
+        .then((response) => {
+          console.log(response);
+        });
+    },
+    onFile(event) {
+      //TODO: file sizeはどこまで？
+      const files = event.target.files || event.dataTransfer.files;
+      if (files[0].type.indexOf("image") < 0) {
+        return alert("イメージファイルを指定してください。");
+      }
+
+      this.getImage(files[0]);
+      console.log(files[0]);
+    },
+    getImage(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.uploadedImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      console.log(reader);
+    },
+    remove() {
+      this.uploadedImage = false;
     },
   },
 };
