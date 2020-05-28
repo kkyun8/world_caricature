@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::SampleImagesController < ApplicationController
-  # require 'aws-sdk-s3'
+  require 'aws-sdk'
 
   def index
     # TODO: AWS download
@@ -25,29 +25,47 @@ class Api::SampleImagesController < ApplicationController
   end
 
   def create
+    require 'aws-sdk'
+
+    Aws.config(
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    )
+
+    @s3 = Aws::S3.new ENV['AWS_DEFAULT_REGION']
     # param[:uploaded_image]
     # TODO: AWS upload
-    # s3 = Aws::S3::Resource.new(region: 'us-west-2') # tokyo
-    # # uploadfile
-    # file = 'filename'
-    # bucket = ENV['SAMPLE_IMAGE_BUCKET']
+    # s3 = Aws::S3::Resource.new(region: ENV['AWS_DEFAULT_REGION']) # tokyo
 
-    # # Get just the file name
+    # uploadfile
+    file = params[:uploaded_image]
+    file_name = '1.jpg'
+
+    bucket = ENV['SAMPLE_IMAGES_BUCKET']
+    obj = @s3.bucket(bucket).objects(file_name)
+    obj.write(file)
+
+    # bucket = ENV['SAMPLE_IMAGES_BUCKET']
+    # Get just the file name
     # name = File.basename(file)
+    # # Metadata to add
+    # metadata = { 'answer' => '42' }
 
-    # # Create the object to upload
-    # obj = s3.bucket(bucket).object(name)
+    # Create the object to upload
+    # obj = s3.bucket(bucket).object(file_name)
 
-    # # Upload it
-    # obj.upload_file(file)
+    # obj.write(file)
 
-    @sample_image = SampleImage.new(sample_image_params)
+    # Upload it
+    # obj.upload_file(file, metadata: metadata)
 
-    if @sample_image.save
-      render json: { result: 'SUCCESS', sample_images: @sample_image }
-    else
-      render json: { result: 'FAIL', message: @sample_image.errors.full_message, sample_images: @sample_image }
-    end
+    # @sample_image = SampleImage.new(sample_image_params)
+
+    # if @sample_image.save
+    #   render json: { result: 'SUCCESS', sample_images: @sample_image }
+    # else
+    #   render json: { result: 'FAIL', message: @sample_image.errors.full_message, sample_images: @sample_image }
+    # end
   end
 
   # private
