@@ -3,5 +3,5 @@
 class SampleImage < ApplicationRecord
   validates :name, presence: true
 
-  # belong_to :user
+  #belong_to :user
 end

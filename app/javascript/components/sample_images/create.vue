@@ -80,6 +80,7 @@
                 :src="uploadedImage"
                 alt=""
               />
+              <input type="hidden" id="type" name="type" :value="imageType" />
               <div class="card-body">
                 <button class="btn btn-warning" @click.prevent="remove()">
                   ファイル削除
@@ -115,14 +116,20 @@ export default {
       numberOfPeopleRange: [],
       imageUrl: "",
       uploadedImage: "",
+      imageType: "",
+      getFile: "",
     };
   },
   methods: {
     // TODO: price order type numberofpeople master 作成
     // aws s3 連携
     async create() {
+      const url = document.getElementById("image_url").value;
       const response = await axios
-        .post("/api/sample_images", { uploaded_image: this.uploadedImage })
+        .post("/api/sample_images", {
+          file: this.getFile,
+          type: this.imageType,
+        })
         .then((response) => {
           console.log(response);
         });
@@ -135,15 +142,16 @@ export default {
       }
 
       this.getImage(files[0]);
-      console.log(files[0]);
     },
     getImage(file) {
       const reader = new FileReader();
+      this.getFile = file;
+      this.imageType = file.type;
       reader.onload = (e) => {
         this.uploadedImage = e.target.result;
       };
+      // preview 表示
       reader.readAsDataURL(file);
-      console.log(reader);
     },
     remove() {
       this.uploadedImage = false;

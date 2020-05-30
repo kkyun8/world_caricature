@@ -25,42 +25,19 @@ class Api::SampleImagesController < ApplicationController
   end
 
   def create
-    require 'aws-sdk'
-
-    Aws.config(
-      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
-    )
-
-    @s3 = Aws::S3.new ENV['AWS_DEFAULT_REGION']
-    # param[:uploaded_image]
-    # TODO: AWS upload
-    # s3 = Aws::S3::Resource.new(region: ENV['AWS_DEFAULT_REGION']) # tokyo
-
-    # uploadfile
-    file = params[:uploaded_image]
-    file_name = '1.jpg'
+    file = params[:file]
+    b64_image = Base64.strict_encode64(file)
 
     bucket = ENV['SAMPLE_IMAGES_BUCKET']
-    obj = @s3.bucket(bucket).objects(file_name)
-    obj.write(file)
+    file_name = 'test1.jpg'
 
-    # bucket = ENV['SAMPLE_IMAGES_BUCKET']
-    # Get just the file name
-    # name = File.basename(file)
-    # # Metadata to add
-    # metadata = { 'answer' => '42' }
-
-    # Create the object to upload
-    # obj = s3.bucket(bucket).object(file_name)
-
-    # obj.write(file)
-
-    # Upload it
-    # obj.upload_file(file, metadata: metadata)
+    # b64_image = Base64.strict_encode64(file)
+    s3 = Aws::S3::Resource.new(access_key_id: ENV['AWS_ACCESS_KEY_ID'], secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'])
+    obj = s3.bucket(bucket).object(file_name)
+    # TODO: local fileではないとアップロードできない
+    obj.upload_file(file)
 
     # @sample_image = SampleImage.new(sample_image_params)
-
     # if @sample_image.save
     #   render json: { result: 'SUCCESS', sample_images: @sample_image }
     # else
