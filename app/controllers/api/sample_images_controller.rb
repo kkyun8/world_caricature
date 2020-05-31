@@ -25,29 +25,29 @@ class Api::SampleImagesController < ApplicationController
   end
 
   def create
-    file = params[:file]
-    b64_image = Base64.strict_encode64(file)
-
-    bucket = ENV['SAMPLE_IMAGES_BUCKET']
-    file_name = 'test1.jpg'
-
+    # file = params[:file]
     # b64_image = Base64.strict_encode64(file)
-    s3 = Aws::S3::Resource.new(access_key_id: ENV['AWS_ACCESS_KEY_ID'], secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'])
-    obj = s3.bucket(bucket).object(file_name)
-    # TODO: local fileではないとアップロードできない
-    obj.upload_file(file)
 
-    # @sample_image = SampleImage.new(sample_image_params)
-    # if @sample_image.save
-    #   render json: { result: 'SUCCESS', sample_images: @sample_image }
-    # else
-    #   render json: { result: 'FAIL', message: @sample_image.errors.full_message, sample_images: @sample_image }
-    # end
+    # bucket = ENV['SAMPLE_IMAGES_BUCKET']
+    # file_name = 'test1.jpg'
+
+    # # b64_image = Base64.strict_encode64(file)
+    # s3 = Aws::S3::Resource.new(access_key_id: ENV['AWS_ACCESS_KEY_ID'], secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'])
+    # obj = s3.bucket(bucket).object(file_name)
+    # # TODO: local fileではないとアップロードできない
+    # obj.upload_file(file)
+
+    @sample_image = SampleImage.create(sample_image_params)
+    if @sample_image.save
+      render json: { result: 'SUCCESS', sample_images: @sample_image }
+    else
+      render json: { result: 'FAIL', message: @sample_image.errors.full_message, sample_images: @sample_image }
+    end
   end
 
-  # private
+  private
 
-  # def sample_image_params
-  #   params.require(:sample_images).permit(:name, :information, :order_type, :price, :number_of_people, :image_url)
-  # end
+  def sample_image_params
+    params.require(:sample_images).permit(:name, :information, :order_type, :price, :number_of_people, :image_url)
+  end
 end

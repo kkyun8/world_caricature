@@ -30,8 +30,9 @@
             <div class="form-group col-md-3">
               <label for="price">値段</label>
               <select id="price" v-model="price" class="form-control">
-                <option selected>選択してください。</option>
-                <option>...</option>
+                <option v-for="p in priceRange" :key="p">
+                  {{ p }}
+                </option>
               </select>
             </div>
             <div class="form-group col-md-3">
@@ -41,15 +42,17 @@
                 v-model="numberOfPeople"
                 class="form-control"
               >
-                <option selected>選択してください。</option>
-                <option>...</option>
+                <option v-for="n in numberOfPeopleRange" :key="n">
+                  {{ n }}
+                </option>
               </select>
             </div>
             <div class="form-group col-md-3">
               <label for="order_type">オーダータイプ</label>
-              <select id="order_type" class="form-control">
-                <option selected>オーダータイプを選択してください。</option>
-                <option>...</option>
+              <select id="order_type" v-model="orderType" class="form-control">
+                <option v-for="o in orderTypeRange" :key="o">
+                  {{ o }}
+                </option>
               </select>
             </div>
             <div class="form-group col-md-3">
@@ -109,11 +112,11 @@ export default {
       name: "",
       information: "",
       orderType: 0,
-      orderTypeRange: [],
-      price: 0,
-      priceRange: [],
-      numberOfPeople: 0,
-      numberOfPeopleRange: [],
+      orderTypeRange: [0, 1, 2, 3],
+      price: 10000,
+      priceRange: [10000, 12000, 15000],
+      numberOfPeople: 1,
+      numberOfPeopleRange: [1, 2, 3, 4, 5],
       imageUrl: "",
       uploadedImage: "",
       imageType: "",
@@ -125,10 +128,15 @@ export default {
     // aws s3 連携
     async create() {
       const url = document.getElementById("image_url").value;
+      // to-> form submit
       const response = await axios
         .post("/api/sample_images", {
-          file: this.getFile,
-          type: this.imageType,
+          name: this.name,
+          information: this.information,
+          order_type: this.orderType,
+          price: this.price,
+          number_of_people: this.numberOfPeople,
+          image_url: this.getFile,
         })
         .then((response) => {
           console.log(response);
