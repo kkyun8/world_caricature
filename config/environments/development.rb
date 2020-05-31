@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -28,19 +30,19 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :stmp
   config.action_mailer.smtp_settings = {
 
-    port:                 465,
-    address:              "smtp.naver.com",
-    domain:               'naver.com',
-    user_name:            'kim23302',
-    password:             ENV['EMAIL_PASSWORD'],
-    authentication:       'login',
+    port: 465,
+    address: 'smtp.naver.com',
+    domain: 'naver.com',
+    user_name: 'kim23302',
+    password: ENV['EMAIL_PASSWORD'],
+    authentication: 'login',
     enable_starttls_auto: true
   }
 
