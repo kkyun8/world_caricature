@@ -3,7 +3,15 @@
     <div class="py-5">
       <div class="container py-2">
         <h4>サンプル登録</h4>
-        <form>
+        <form
+          id="sample_image"
+          name="sample_image"
+          action="/api/sample_images"
+          method="POST"
+          ref="sample_image"
+        >
+          <input type="hidden" name="authenticity_token" :value="token" />
+          <input type="hidden" id="image_url" name="image_url" value="url" />
           <div class="form-row">
             <div class="form-group col-md-12">
               <label for="name">サンプル名</label>
@@ -12,6 +20,7 @@
                 v-model="name"
                 class="form-control"
                 id="name"
+                name="name"
               />
             </div>
           </div>
@@ -23,6 +32,7 @@
                 v-model="information"
                 class="form-control"
                 id="information"
+                name="information"
               />
             </div>
           </div>
@@ -39,6 +49,7 @@
               <label for="number_of_people">人数</label>
               <select
                 id="number_of_people"
+                name="number_of_people"
                 v-model="numberOfPeople"
                 class="form-control"
               >
@@ -49,7 +60,12 @@
             </div>
             <div class="form-group col-md-3">
               <label for="order_type">オーダータイプ</label>
-              <select id="order_type" v-model="orderType" class="form-control">
+              <select
+                id="order_type"
+                name="order_type"
+                v-model="orderType"
+                class="form-control"
+              >
                 <option v-for="o in orderTypeRange" :key="o">
                   {{ o }}
                 </option>
@@ -62,7 +78,8 @@
                   <input
                     type="file"
                     class="custom-file-input"
-                    id="image_url"
+                    id="image"
+                    name="image"
                     @change="onFile"
                   />
                   <label
@@ -83,7 +100,6 @@
                 :src="uploadedImage"
                 alt=""
               />
-              <input type="hidden" id="type" name="type" :value="imageType" />
               <div class="card-body">
                 <button class="btn btn-warning" @click.prevent="remove()">
                   ファイル削除
@@ -119,24 +135,29 @@ export default {
       numberOfPeopleRange: [1, 2, 3, 4, 5],
       imageUrl: "",
       uploadedImage: "",
-      imageType: "",
       getFile: "",
+      token: document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
     };
   },
   methods: {
-    // TODO: price order type numberofpeople master 作成
     // aws s3 連携
     async create() {
-      const url = document.getElementById("image_url").value;
-      // to-> form submit
+      const sample_image = new FormData();
+      sample_image.append("name", this.name);
+      sample_image.append("information", this.information);
+      sample_image.append("order_type", this.orderType);
+      sample_image.append("price", this.price);
+      sample_image.append("number_of_people", this.numberOfPeople);
+      sample_image.append("image", this.getFile);
+      sample_image.append("image_url", "url");
+
       const response = await axios
-        .post("/api/sample_images", {
-          name: this.name,
-          information: this.information,
-          order_type: this.orderType,
-          price: this.price,
-          number_of_people: this.numberOfPeople,
-          image_url: this.getFile,
+        .post("/api/sample_images", sample_image, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
         })
         .then((response) => {
           console.log(response);
@@ -154,7 +175,6 @@ export default {
     getImage(file) {
       const reader = new FileReader();
       this.getFile = file;
-      this.imageType = file.type;
       reader.onload = (e) => {
         this.uploadedImage = e.target.result;
       };
