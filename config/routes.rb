@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # post   '/login',   to: 'sessions#create'
   # delete '/logout',  to: 'sessions#destroy'
 
-  #/users/auth/google
+  #/users/auth/divise
   devise_for :users, controllers: {
       omniauth_callbacks: "users/omniauth_callbacks"
   }
@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get '/sample_images',   to: 'home#index'
   get '/about_the_order', to: 'home#index'
   get '/sample_images/:id/order', to: 'home#index'
+  get '/sample_images/new', to: 'home#index'
+  get '/sample_images/:id', to: 'home#index'
   get '/payment/:order_number', to: 'home#index'
   get '/payment/:order_number/success/', to: 'home#index'
   get '/not_found/:order_number', to: 'home#index'

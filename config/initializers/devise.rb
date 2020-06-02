@@ -41,6 +41,16 @@ Devise.setup do |config|
                   ENV['FACEBOOK_APP_SECRET'],
                   name: :facebook,
                   scope: %w(email) 
+  config.omniauth :twitter,
+                  ENV['TWITTER_APP_ID'],
+                  ENV['TWITTER_APP_SECRET'],
+                  name: :twitter,
+                  scope: %w(email)
+  # config.omniauth :line, TODO:
+  #                 ENV['FACEBOOK_APP_ID'],
+  #                 ENV['FACEBOOK_APP_SECRET'],
+  #                 name: :line,
+  #                 scope: %w(email)
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
