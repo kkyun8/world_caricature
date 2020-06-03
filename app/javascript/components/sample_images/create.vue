@@ -11,7 +11,6 @@
           ref="sample_image"
         >
           <input type="hidden" name="authenticity_token" :value="token" />
-          <input type="hidden" id="image_url" name="image_url" value="url" />
           <div class="form-row">
             <div class="form-group col-md-12">
               <label for="name">サンプル名</label>
@@ -78,33 +77,39 @@
                   <input
                     type="file"
                     class="custom-file-input"
-                    id="image"
-                    name="image"
+                    id="images"
+                    name="images"
+                    multiple="multiple"
                     @change="onFile"
                   />
                   <label
                     class="custom-file-label"
                     for="inputFile"
                     data-browse="参照"
-                    >ファイルを選択</label
+                    >{{
+                      getFiles.length === 0
+                        ? "ファイルを選択"
+                        : "イメージを確認してください。"
+                    }}</label
                   >
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="uploadedImage" class="form-row">
+          <div v-if="uploadedImages.length > 0" class="form-row">
             <div class="form-group">
               <img
+                v-for="(i, index) in uploadedImages"
+                :key="index"
                 class="rounded float-left"
-                v-show="uploadedImage"
-                :src="uploadedImage"
+                :src="i"
                 alt=""
+                width="300"
+                height="200"
               />
-              <div class="card-body">
-                <button class="btn btn-warning" @click.prevent="remove()">
-                  ファイル削除
-                </button>
-              </div>
+              <button class="btn btn-warning" @click.prevent="remove()">
+                全てのファイル削除
+              </button>
             </div>
           </div>
           <button
@@ -133,9 +138,8 @@ export default {
       priceRange: [10000, 12000, 15000],
       numberOfPeople: 1,
       numberOfPeopleRange: [1, 2, 3, 4, 5],
-      imageUrl: "",
-      uploadedImage: "",
-      getFile: "",
+      uploadedImages: [],
+      getFiles: [],
       token: document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content"),
@@ -143,6 +147,8 @@ export default {
   },
   methods: {
     // aws s3 連携
+    // TODO: sql 例    select blobs.* from active_storage_blobs blobs
+    // left join (select record_id from active_storage_attachments) attach on blobs.id = attach.record_id
     async create() {
       const sample_image = new FormData();
       sample_image.append("name", this.name);
@@ -150,8 +156,7 @@ export default {
       sample_image.append("order_type", this.orderType);
       sample_image.append("price", this.price);
       sample_image.append("number_of_people", this.numberOfPeople);
-      sample_image.append("image", this.getFile);
-      sample_image.append("image_url", "url");
+      sample_image.append("images", this.getFiles);
 
       const response = await axios
         .post("/api/sample_images", sample_image, {
@@ -166,23 +171,21 @@ export default {
     onFile(event) {
       //TODO: file sizeはどこまで？
       const files = event.target.files || event.dataTransfer.files;
-      if (files[0].type.indexOf("image") < 0) {
-        return alert("イメージファイルを指定してください。");
+      for (var i = 0; i < files.length; i++) {
+        if (files[i].type.indexOf("image") < 0) {
+          return alert("イメージファイルを指定してください。");
+        }
+        this.getFiles.push(files[i]);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.uploadedImages.push(e.target.result);
+        };
+        // preview 表示
+        reader.readAsDataURL(files[i]);
       }
-
-      this.getImage(files[0]);
-    },
-    getImage(file) {
-      const reader = new FileReader();
-      this.getFile = file;
-      reader.onload = (e) => {
-        this.uploadedImage = e.target.result;
-      };
-      // preview 表示
-      reader.readAsDataURL(file);
     },
     remove() {
-      this.uploadedImage = false;
+      this.uploadedImages = false;
     },
   },
 };
