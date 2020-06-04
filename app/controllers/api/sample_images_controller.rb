@@ -26,6 +26,6 @@ class Api::SampleImagesController < ApplicationController
   private
 
   def sample_image_params
-    params.permit(:name, :information, :order_type, :price, :number_of_people, :image_url, :image)
+    params.permit(:name, :information, :order_type, :price, :number_of_people, images: [])
   end
 end
