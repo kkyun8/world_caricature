@@ -156,7 +156,10 @@ export default {
       sample_image.append("order_type", this.orderType);
       sample_image.append("price", this.price);
       sample_image.append("number_of_people", this.numberOfPeople);
-      sample_image.append("images", this.getFiles);
+
+      for (var i = 0; i < this.getFiles.length; i++) {
+        sample_image.append("[images][]", this.getFiles[i]);
+      }
 
       const response = await axios
         .post("/api/sample_images", sample_image, {
@@ -170,6 +173,7 @@ export default {
     },
     onFile(event) {
       //TODO: file sizeはどこまで？
+      this.getFiles = [];
       const files = event.target.files || event.dataTransfer.files;
       for (var i = 0; i < files.length; i++) {
         if (files[i].type.indexOf("image") < 0) {
