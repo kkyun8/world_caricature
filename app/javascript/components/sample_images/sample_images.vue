@@ -8,7 +8,9 @@
               サンプルイメージ検索
               <br />
             </h1>
-            <p class="mb-4">お客様が欲しがってる似顔絵イメージと同一な物が会ったら選択してください。簡単に注文できます。</p>
+            <p class="mb-4">
+              お客様が欲しがってる似顔絵イメージと同一な物が会ったら選択してください。簡単に注文できます。
+            </p>
           </div>
         </div>
         <div class="row">
@@ -39,7 +41,8 @@
               v-bind:key="viewKeyword.id"
               class="btn btn-outline-primary mx-2"
               v-on:click="setKeyword(viewKeyword.name)"
-            >{{ viewKeyword.name }}</a>
+              >{{ viewKeyword.name }}</a
+            >
           </div>
         </div>
       </div>
@@ -74,7 +77,7 @@ export default {
   components: {
     // imageが表示されるcomponentを設定 ./image
     "v-image": Image,
-    InfiniteLoading
+    InfiniteLoading,
   },
   data: function() {
     return {
@@ -82,13 +85,13 @@ export default {
       start: 0,
       images: [],
       // loading画面表示
-      viewKeywords: []
+      viewKeywords: [],
     };
   },
 
   // mapGettersはcomputedに宣言
   computed: {
-    ...mapGetters(["getSampleImages"])
+    ...mapGetters(["getSampleImages"]),
   },
 
   watch: {
@@ -96,13 +99,13 @@ export default {
       if (val.length < 1) {
         return (this.images = this.getSampleImages);
       } else {
-        return (this.images = this.getSampleImages.filter(array => {
+        return (this.images = this.getSampleImages.filter((array) => {
           return (
             array.name.indexOf(val) >= 0 || array.information.indexOf(val) >= 0
           );
         }));
       }
-    }
+    },
   },
   created: function() {
     //画面の最上に
@@ -116,17 +119,53 @@ export default {
 
   // mapMutationsはmethodに宣言
   methods: {
+    tests3() {
+      console.log(this.s3);
+      // const s3 = await this.$store.dispatch("aws/s3");
+      // s3.listObjects({ Delimiter: "/" }, function(err, data) {
+      //   if (err) {
+      //     return alert(
+      //       "There was an error listing your albums: " + err.message
+      //     );
+      //   } else {
+      //     var albums = data.CommonPrefixes.map(function(commonPrefix) {
+      //       var prefix = commonPrefix.Prefix;
+      //       var albumName = decodeURIComponent(prefix.replace("/", ""));
+      //       return getHtml([
+      //         "<li>",
+      //         '<button style="margin:5px;" onclick="viewAlbum(\'' +
+      //           albumName +
+      //           "')\">",
+      //         albumName,
+      //         "</button>",
+      //         "</li>",
+      //       ]);
+      //     });
+      //     var message = albums.length
+      //       ? getHtml(["<p>Click on an album name to view it.</p>"])
+      //       : "<p>You do not have any albums. Please Create album.";
+      //     var htmlTemplate = [
+      //       "<h2>Albums</h2>",
+      //       message,
+      //       "<ul>",
+      //       getHtml(albums),
+      //       "</ul>",
+      //     ];
+      //     document.getElementById("viewer").innerHTML = getHtml(htmlTemplate);
+      //   }
+      // });
+    },
     // TODO: ロジック修正予定infinite-loadingのクラス宣言 検索ロジック変更
     infiniteHandler($state) {
       axios.get(api).then(
-        response => {
-          response.data.sample_images.forEach(element => {
+        (response) => {
+          response.data.sample_images.forEach((element) => {
             this.images.push(element);
             this.start = element.id;
             $state.complete();
           });
         },
-        error => {
+        (error) => {
           $state.complete();
         }
       );
@@ -162,8 +201,8 @@ export default {
 
     setKeyword(val) {
       this.keyword = val;
-    }
-  }
+    },
+  },
 };
 </script>
 
