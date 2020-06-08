@@ -13,6 +13,9 @@
         </div>
       </div>
       <div class="container">
+        <div v-if="adminFlg" class="float-right mr-3 mb-3">
+          <button class="btn btn-primary">お知らせ作成</button>
+        </div>
         <div class="col-md-12">
           <table class="table">
             <thead>
@@ -20,6 +23,7 @@
                 <th scope="col">No</th>
                 <th scope="col">Title</th>
                 <th scope="col">Date</th>
+                <th v-if="adminFlg" scope="col">Update/Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -27,12 +31,14 @@
                 <td>{{ news.id }}</td>
                 <td>{{ news.title }}</td>
                 <td>{{ news.updated_at }}</td>
+                <td v-if="adminFlg">
+                  <button class="btn btn-primary">更新</button>
+                  <button class="btn btn-warning">削除</button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="container">
         <div class="mx-auto col-lg-12">
           <ul class="pagination">
             <li class="page-item">
@@ -41,18 +47,10 @@
                 class="page-link"
                 v-bind:disabled="page == 1"
                 @click="page--"
-              >
-                Previous
-              </button>
+              >Previous</button>
             </li>
-            <li
-              class="page-item"
-              v-for="pageNumber in pages"
-              v-bind:key="pageNumber.index"
-            >
-              <a class="page-link" @click="page = pageNumber">
-                {{ pageNumber }}
-              </a>
+            <li class="page-item" v-for="pageNumber in pages" v-bind:key="pageNumber.index">
+              <a class="page-link" @click="page = pageNumber">{{ pageNumber }}</a>
             </li>
             <li class="page-item">
               <button
@@ -60,9 +58,7 @@
                 class="page-link"
                 @click="page++"
                 v-if="page < pages.length"
-              >
-                Next
-              </button>
+              >Next</button>
             </li>
           </ul>
         </div>
@@ -72,8 +68,14 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
+  computed: {
+    isAdmin() {
+      return this.$store.getters["auth/isAdmin"];
+    }
+  },
   data: function() {
     return {
       currentPage: 1,
@@ -83,12 +85,13 @@ export default {
       page: 1,
       posts: [],
       pages: [],
+      adminFlg: this.isAdmin
     };
   },
   methods: {
     getPosts() {
-      axios.get("/api/news/").then((response) => {
-        response.data.news.forEach((element) => {
+      axios.get("/api/news/").then(response => {
+        response.data.news.forEach(element => {
           const updateDate = new Date(element.updated_at);
           const y = updateDate.getFullYear();
           const m = ("00" + (updateDate.getMonth() + 1)).slice(-2);
@@ -97,7 +100,7 @@ export default {
           const news = {
             id: element.id,
             title: element.title,
-            updated_at: updated_at,
+            updated_at: updated_at
           };
           this.posts.push(news);
         });
@@ -115,17 +118,17 @@ export default {
       let from = page * perPage - perPage;
       let to = page * perPage;
       return posts.slice(from, to);
-    },
+    }
   },
   computed: {
     displayedPosts() {
       return this.paginate(this.posts);
-    },
+    }
   },
   watch: {
     posts() {
       this.setPages();
-    },
+    }
   },
   created() {
     this.getPosts();
@@ -138,8 +141,8 @@ export default {
           .splice(0, 20)
           .join(" ") + "..."
       );
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss"></style>
