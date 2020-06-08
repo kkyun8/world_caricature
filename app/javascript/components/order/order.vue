@@ -147,15 +147,15 @@
               <div class="form-group col-md-6"> <label><b>名前（ふりがな）</b><span class="text-danger">＊全角文字</span></label> <input v-model="order.name_furigana" type="text" class="form-control" placeholder="やまだたろう" maxlength="25"> </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6"> <label><b>メール</b></label><span class="text-danger" style="font-size: 11px">＊簡単ログインは以下のアイコンクリック</span><input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com" maxlength="50">
+              <div class="form-group col-md-6"> <label><b>メール</b></label><span class="text-danger" style="font-size: 11px"></span><input v-model="order.email" type="text" class="form-control" placeholder="gmail@gmail.com" maxlength="50">
                 <div class="form-group py-2">
-                  <a class="btn btn-outline-primary" style="width:24%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
-                  <a class="btn btn-outline-primary" style="width:24%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
-                  <a class="btn btn-outline-primary" style="width:24%; color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
-                  <a class="btn btn-outline-primary" style="width:24%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:23%; color:#3b5999" href="#"><font-awesome-icon :icon="['fab', 'facebook']" size="2x"/></i></a>
+                  <a class="btn btn-outline-primary" style="width:23%; color:#55acee" href="#"><font-awesome-icon :icon="['fab', 'twitter']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:23%; color:#dd4b39" href="#"><font-awesome-icon :icon="['fab', 'google']" size="2x"/></a>
+                  <a class="btn btn-outline-primary" style="width:23%; color:#e4405f" href="#"><font-awesome-icon :icon="['fab', 'instagram']" size="2x"/></a>
                 </div>
               </div>
-              <div class="form-group col-md-6"> <label><b>ラインID</b></label><span class="text-danger" style="font-size: 11px">＊ワンタッチログインはアイコンクリック</span><input v-bind:value="order.line_id == '' ? 'ラインロゴをクリックしてください。':'ラインIDが登録されました。'" type="text" class="form-control" placeholder="＊小文字・半角英数字と「 . , - , _ 」のみ" readonly>
+              <div class="form-group col-md-6"> <label><b>ラインID</b></label><span class="text-danger" style="font-size: 11px">＊ログインはアイコンクリック</span><input v-bind:value="order.line_id == '' ? 'ラインロゴをクリックしてください。':'ラインIDが登録されました。'" type="text" class="form-control" placeholder="＊小文字・半角英数字と「 . , - , _ 」のみ" readonly>
                 <div class="form-group py-2">
                   <a class="btn btn-outline-primary w-100" style="color:#00c300" @click="getLineId()" ><font-awesome-icon :icon="['fab', 'line']" size="2x"/></a>
                 </div>
