@@ -19,6 +19,8 @@ class Api::SampleImagesController < ApplicationController
   end
 
   def create
+    # before_action :authenticate_user!
+
     @sample_image = SampleImage.new(sample_image_params)
 
     if @sample_image.save
@@ -29,6 +31,8 @@ class Api::SampleImagesController < ApplicationController
   end
 
   def update
+    # before_action :authenticate_user!
+
     @sample_image = SampleImage.find(params[:id])
 
     if @sample_image.update(sample_image_params)
