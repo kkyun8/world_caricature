@@ -32,6 +32,7 @@ gem 'square.rb'
 # add rails-i18n
 gem 'rails-i18n'
 
+gem 'bootswatch', github: 'thomaspark/bootswatch'
 # add bootstrap (depandency- jquery-rails)
 gem 'bootstrap'
 gem 'jquery-rails'
