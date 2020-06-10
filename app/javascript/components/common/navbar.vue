@@ -59,6 +59,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-</style>
+<style lang="scss"></style>

@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>WorldCaricature</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <!-- PAGE settings -->
-    <link rel="icon" href="https://templates.pingendo.com/assets/Pingendo_favicon.ico">
-    <!-- CSS dependencies -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-    <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js"></script>
-  </head>
-  <body>
-    <%= yield %>
-  </body>
+<head>
+  <title>WorldCaricature</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <!-- PAGE settings -->
+  <link rel="icon" href="https://templates.pingendo.com/assets/Pingendo_favicon.ico">
+  <!-- CSS dependencies -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js"></script>
+</head>
+
+<body>
+  <%= yield %>
+</body>
+
 </html>
