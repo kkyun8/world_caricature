@@ -2,13 +2,13 @@ import AWS from "aws-sdk";
 require("dotenv").config();
 
 export default {
-  async created() {
-    this.s3 = await this.getS3();
-  },
-  data() {
-    return {
-      s3: "",
-    };
+  computed: {
+    s3() {
+      return this.getS3();
+    },
+    albumBucket() {
+      return process.env.AWS_BUCKET;
+    },
   },
   methods: {
     getS3() {
@@ -20,7 +20,10 @@ export default {
       });
 
       const s3 = new AWS.S3({
+        apiVersion: "2006-03-01",
         params: { Bucket: albumBucketName },
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       });
 
       return s3;

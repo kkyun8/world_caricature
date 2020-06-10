@@ -36,10 +36,10 @@
               </a>
             </li>
           </ul>
-          <template v-if="userName">{{userName}}</template>
+          <template v-if="userName">{{ userName }}</template>
           <template v-else>
             <a class="btn btn-outline-primary" href="/register">作家登録</a>
-            <a class="btn btn-outline-primary" href="/login">ログイン</a>
+            <a class="btn btn-outline-primary ml-1" href="/login">ログイン</a>
           </template>
         </div>
       </div>
@@ -53,9 +53,9 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      userName: "auth/userName"
-    })
-  }
+      userName: "auth/userName",
+    }),
+  },
 };
 </script>
 

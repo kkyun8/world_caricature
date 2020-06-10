@@ -17,8 +17,8 @@ gem 'omniauth-twitter'
 # gem 'omniauth-rails_csrf_protection'
 
 gem 'composite_primary_keys'
-gem 'kaminari'
-gem 'kaminari-bootstrap'
+# gem 'kaminari'
+# gem 'kaminari-bootstrap'
 
 gem 'line-bot-api'
 
@@ -30,8 +30,8 @@ gem 'rake'
 # add square
 gem 'square.rb'
 # add rails-i18n
+gem 'bootswatch'
 gem 'rails-i18n'
-
 # add bootstrap (depandency- jquery-rails)
 gem 'bootstrap'
 gem 'jquery-rails'

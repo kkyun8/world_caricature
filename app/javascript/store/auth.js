@@ -13,6 +13,12 @@ const getters = {
   userName: (state) => {
     return state.user ? state.user.name : "";
   },
+  isAdmin: (state) => {
+    if (state.user) {
+      return false;
+    }
+    return state.user.adminFlg;
+  },
 };
 
 const mutations = {
