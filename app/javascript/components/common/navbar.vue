@@ -1,51 +1,63 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
-      <div class="container">
-        <button
-          class="navbar-toggler navbar-toggler-right border-0 collapsed"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbar6"
-          aria-expanded="false"
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/">
+      <!-- TODO: アイコン作成-->
+      <img
+        src=""
+        width="30"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+        loading="lazy"
+      />
+      World Caricature ワルード似顔絵
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarColor01"
+      aria-controls="navbarColor01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/sample_images">サンプルイメージ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">注文確認</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about_the_order">注文について</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/news">お知らせ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">お問い合わせ・作家募集</a>
+        </li>
+      </ul>
+      <!-- TODO: -->
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item">
+          <a class="nav-link" href="/register">作家登録</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">作家登録</a>
+        </li>
+        <!-- <template v-if="userName != null || userName != ''">
+          <li class="nav-item">{{ userName }}</li></template
         >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse" id="navbar6" style>
-          <a class="navbar-brand text-primary d-none d-md-block" href="/">
-            <i class="fa d-inline fa-lg fa-circle"></i>
-            <b>ワルード似顔絵</b>
-          </a>
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/sample_images">サンプルイメージ</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">注文確認</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/about_the_order">注文について</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/news">お知らせ</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/contact">
-                お問い合わせ・作家募集
-                <br />
-              </a>
-            </li>
-          </ul>
-          <template v-if="userName">{{ userName }}</template>
-          <template v-else>
-            <a class="btn btn-outline-primary" href="/register">作家登録</a>
-            <a class="btn btn-outline-primary ml-1" href="/login">ログイン</a>
-          </template>
-        </div>
-      </div>
-    </nav>
-    <div class="py-3"></div>
-  </div>
+        <template> -->
+      </ul>
+    </div>
+    <!-- <div class="py-3"></div> -->
+  </nav>
 </template>
 
 <script>
